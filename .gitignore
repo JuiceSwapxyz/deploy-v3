@@ -106,3 +106,7 @@ dist
 .tern-port
 
 .nvmrc
+
+# Deployment credentials
+deployment-wallet.json
+.env

@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(yarn install)",
+      "WebSearch",
+      "Bash(find:*)",
+      "Bash(npm ls:*)",
+      "Bash(yarn list:*)",
+      "Bash(chmod:*)",
+      "Bash(yarn add:*)",
+      "Bash(npx ts-node:*)",
+      "Bash(git checkout:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
