@@ -1,4 +1,5 @@
 import { ethers } from 'ethers'
+import { getCitreaWallet } from './src/util/wallet'
 
 // WETH9 ABI for deposit function
 const WETH9_ABI = [
@@ -10,17 +11,14 @@ const WETH9_ABI = [
 ]
 
 async function wrapCBTC() {
+  // Get wallet connected to Citrea
+  const wallet = getCitreaWallet()
+
   // Configuration
-  const CITREA_RPC = 'https://rpc.testnet.citrea.xyz'
   const WETH9_ADDRESS = '0x4370e27F7d91D9341bFf232d7Ee8bdfE3a9933a0'
-  const PRIVATE_KEY = '0x6270e932efe97360cefa8b16e4db0b839b2dae8a0aa9d9d7f30fd753884a97ba'
-  
+
   // Amount to wrap (0.001 cBTC)
   const amountToWrap = ethers.utils.parseEther('0.001')
-  
-  // Connect to Citrea
-  const provider = new ethers.providers.JsonRpcProvider(CITREA_RPC, 5115)
-  const wallet = new ethers.Wallet(PRIVATE_KEY, provider)
   
   console.log('🔄 Wrapping cBTC to WETH (Wrapped cBTC)')
   console.log('=====================================')

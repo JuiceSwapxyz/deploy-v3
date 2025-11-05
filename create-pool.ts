@@ -1,6 +1,7 @@
 import { ethers } from 'ethers'
 import { abi as IUniswapV3FactoryABI } from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Factory.sol/IUniswapV3Factory.json'
 import { abi as INonfungiblePositionManagerABI } from '@uniswap/v3-periphery/artifacts/contracts/interfaces/INonfungiblePositionManager.sol/INonfungiblePositionManager.json'
+import { getCitreaWallet } from './src/util/wallet'
 
 // ERC20 ABI for approve
 const ERC20_ABI = [
@@ -12,10 +13,9 @@ const ERC20_ABI = [
 ]
 
 async function createPoolAndAddLiquidity() {
-  // Configuration
-  const CITREA_RPC = 'https://rpc.testnet.citrea.xyz'
-  const PRIVATE_KEY = '0x6270e932efe97360cefa8b16e4db0b839b2dae8a0aa9d9d7f30fd753884a97ba'
-  
+  // Get wallet connected to Citrea
+  const wallet = getCitreaWallet()
+
   // Contract addresses
   const FACTORY_ADDRESS = '0x6832283eEA5a9A3C4384A5D9a06Db0ce6FE9C79E'
   const POSITION_MANAGER_ADDRESS = '0xe46616BED47317653EE3B7794fC171F4444Ee1c5'
@@ -29,11 +29,7 @@ async function createPoolAndAddLiquidity() {
   // Amounts
   const WCBTC_AMOUNT = ethers.utils.parseEther('0.0001') // 0.0001 WCBTC
   const TFC_AMOUNT = ethers.utils.parseEther('1') // 1 TFC
-  
-  // Connect to Citrea
-  const provider = new ethers.providers.JsonRpcProvider(CITREA_RPC, 5115)
-  const wallet = new ethers.Wallet(PRIVATE_KEY, provider)
-  
+
   console.log('🏊 Creating JuiceSwap V3 Pool: WCBTC/TFC')
   console.log('=========================================')
   console.log('📍 Wallet:', wallet.address)

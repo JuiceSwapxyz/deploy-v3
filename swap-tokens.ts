@@ -1,5 +1,6 @@
 import { ethers } from 'ethers'
-import { abi as ISwapRouterABI } from '@uniswap/v3-periphery/artifacts/contracts/interfaces/ISwapRouter.sol/ISwapRouter.json'
+import { abi as ISwapRouterABI } from '@uniswap/swap-router-contracts/artifacts/contracts/SwapRouter02.sol/SwapRouter02.json'
+import { getCitreaWallet } from './src/util/wallet'
 
 // ERC20 ABI for approve and balance
 const ERC20_ABI = [
@@ -10,23 +11,18 @@ const ERC20_ABI = [
 ]
 
 async function swapTFCtoWCBTC() {
-  // Configuration
-  const CITREA_RPC = 'https://rpc.testnet.citrea.xyz'
-  const PRIVATE_KEY = '0x6270e932efe97360cefa8b16e4db0b839b2dae8a0aa9d9d7f30fd753884a97ba'
-  
+  // Get wallet connected to Citrea
+  const wallet = getCitreaWallet()
+
   // Contract addresses
   const SWAP_ROUTER_ADDRESS = '0x610c98EAD0df13EA906854b6041122e8A8D14413'
   const WCBTC_ADDRESS = '0x4370e27F7d91D9341bFf232d7Ee8bdfE3a9933a0'
   const TFC_ADDRESS = '0x14ADf6B87096Ef750a956756BA191fc6BE94e473'
   const POOL_ADDRESS = '0x21180B20134C8913bfA6dc866e43A114c026169e'
-  
+
   // Swap parameters
   const TFC_AMOUNT = ethers.utils.parseEther('0.01') // 0.01 TFC
   const FEE = 3000 // 0.3%
-  
-  // Connect to Citrea
-  const provider = new ethers.providers.JsonRpcProvider(CITREA_RPC, 5115)
-  const wallet = new ethers.Wallet(PRIVATE_KEY, provider)
   
   console.log('💱 JuiceSwap V3: Swapping TFC for WCBTC')
   console.log('========================================')

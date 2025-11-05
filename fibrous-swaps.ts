@@ -1,4 +1,5 @@
 import { ethers } from 'ethers'
+import { getCitreaWallet } from './src/util/wallet'
 
 // Fibrous Router configuration
 const FIBROUS_ROUTER = '0xf020580D26fEB76f927F4015c68389C01ff86348'
@@ -30,13 +31,9 @@ const ROUTER_ABI = [
 ]
 
 async function performSwaps() {
-  // Configuration
-  const CITREA_RPC = 'https://rpc.testnet.citrea.xyz'
-  const PRIVATE_KEY = '0x6270e932efe97360cefa8b16e4db0b839b2dae8a0aa9d9d7f30fd753884a97ba'
-
-  // Connect to Citrea
-  const provider = new ethers.providers.JsonRpcProvider(CITREA_RPC, 5115)
-  const wallet = new ethers.Wallet(PRIVATE_KEY, provider)
+  // Get wallet connected to Citrea
+  const wallet = getCitreaWallet()
+  const provider = wallet.provider
 
   console.log('🔄 Fibrous Swaps for Bapps Campaign')
   console.log('=====================================')

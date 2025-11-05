@@ -1,5 +1,6 @@
 import { HardhatUserConfig } from "hardhat/config";
 import "@nomiclabs/hardhat-etherscan";
+import { getPrivateKey } from "./src/util/wallet";
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -15,7 +16,7 @@ const config: HardhatUserConfig = {
     citrea: {
       url: "https://rpc.testnet.citrea.xyz",
       chainId: 5115,
-      accounts: ["0x6270e932efe97360cefa8b16e4db0b839b2dae8a0aa9d9d7f30fd753884a97ba"],
+      accounts: getPrivateKey() ? [getPrivateKey()!] : [],
     },
   },
   etherscan: {
