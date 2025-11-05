@@ -107,6 +107,15 @@ dist
 
 .nvmrc
 
+# Hardhat
+artifacts/
+cache/
+typechain/
+typechain-types/
+
+# Claude Code local settings
+.claude/settings.local.json
+
 # Deployment credentials
 deployment-wallet.json
 .env

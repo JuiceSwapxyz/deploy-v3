@@ -4,9 +4,9 @@ import { migrate } from './migrate'
 import { MigrationState, MigrationStep, StepOutput } from './migrations'
 import { ADD_1BP_FEE_TIER } from './steps/add-1bp-fee-tier'
 import { DEPLOY_MULTICALL2 } from './steps/deploy-multicall2'
-import { DEPLOY_NFT_DESCRIPTOR_LIBRARY_V1_3_0 } from './steps/deploy-nft-descriptor-library-v1_3_0'
+import { DEPLOY_JUICESWAP_NFT_DESCRIPTOR_LIBRARY } from './steps/deploy-juiceswap-nft-descriptor-library'
 import { DEPLOY_NFT_POSITION_DESCRIPTOR_V1_3_0 } from './steps/deploy-nft-position-descriptor-v1_3_0'
-import { DEPLOY_NONFUNGIBLE_POSITION_MANAGER } from './steps/deploy-nonfungible-position-manager'
+import { DEPLOY_NONFUNGIBLE_POSITION_MANAGER_JUICESWAP } from './steps/deploy-nonfungible-position-manager-juiceswap'
 import { DEPLOY_PROXY_ADMIN } from './steps/deploy-proxy-admin'
 import { DEPLOY_QUOTER_V2 } from './steps/deploy-quoter-v2'
 import { DEPLOY_TICK_LENS } from './steps/deploy-tick-lens'
@@ -25,10 +25,10 @@ const MIGRATION_STEPS: MigrationStep[] = [
   DEPLOY_MULTICALL2,
   DEPLOY_PROXY_ADMIN,
   DEPLOY_TICK_LENS,
-  DEPLOY_NFT_DESCRIPTOR_LIBRARY_V1_3_0,
+  DEPLOY_JUICESWAP_NFT_DESCRIPTOR_LIBRARY,
   DEPLOY_NFT_POSITION_DESCRIPTOR_V1_3_0,
   DEPLOY_TRANSPARENT_PROXY_DESCRIPTOR,
-  DEPLOY_NONFUNGIBLE_POSITION_MANAGER,
+  DEPLOY_NONFUNGIBLE_POSITION_MANAGER_JUICESWAP,
   DEPLOY_V3_MIGRATOR,
   TRANSFER_V3_CORE_FACTORY_OWNER,
   DEPLOY_V3_STAKER,
