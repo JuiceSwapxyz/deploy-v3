@@ -119,3 +119,6 @@ typechain-types/
 # Deployment credentials
 deployment-wallet.json
 .env
+
+# Network-specific deployment state files
+state.*.json

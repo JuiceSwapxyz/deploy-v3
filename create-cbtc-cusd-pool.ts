@@ -8,6 +8,17 @@ import { abi as IUniswapV3PoolABI } from '@uniswap/v3-core/artifacts/contracts/i
 // Load environment variables
 dotenv.config()
 
+/**
+ * Create cBTC/cUSD Pool on JuiceSwap V3
+ *
+ * Usage:
+ *   npx ts-node create-cbtc-cusd-pool.ts [stateFile]
+ *
+ * Examples:
+ *   npx ts-node create-cbtc-cusd-pool.ts state.citreaTestnet.json
+ *   npx ts-node create-cbtc-cusd-pool.ts  (defaults to state.citreaTestnet.json)
+ */
+
 // ERC20 ABI for approve and balance checking
 const ERC20_ABI = [
   "function approve(address spender, uint256 amount) returns (bool)",
@@ -36,9 +47,20 @@ async function createCBTCtoUSDPool() {
     process.exit(1)
   }
 
+  // Get state file from CLI argument or use default
+  const stateFile = process.argv[2] || './state.citreaTestnet.json'
+
   // Read deployment addresses
-  const stateData = JSON.parse(fs.readFileSync('./state.json', 'utf8'))
+  if (!fs.existsSync(stateFile)) {
+    console.error(`❌ Error: State file not found: ${stateFile}`)
+    console.error('Usage: npx ts-node create-cbtc-cusd-pool.ts [stateFile]')
+    process.exit(1)
+  }
+
+  const stateData = JSON.parse(fs.readFileSync(stateFile, 'utf8'))
   const cusdData = JSON.parse(fs.readFileSync('./cusd-deployment.json', 'utf8'))
+
+  console.log(`📄 Using state file: ${stateFile}`)
 
   // Contract addresses from deployments
   const FACTORY_ADDRESS = stateData.v3CoreFactoryAddress

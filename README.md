@@ -19,16 +19,36 @@ JuiceSwap V3 is functionally identical to Uniswap V3, with branding applied only
 
 ## Modified Contracts
 
-| Contract | Source | Changes |
-|----------|--------|---------|
-| `JuiceSwapNonfungiblePositionManager.sol` | [Uniswap v1.3.0](https://github.com/Uniswap/v3-periphery/blob/v1.3.0/contracts/NonfungiblePositionManager.sol) | NFT name, symbol, and contract name |
-| `NFTDescriptor.sol` | [Uniswap v1.3.0](https://github.com/Uniswap/v3-periphery/blob/v1.3.0/contracts/libraries/NFTDescriptor.sol) | Metadata text (2 strings) |
-| `NFTSVG.sol` | [Uniswap v1.3.0](https://github.com/Uniswap/v3-periphery/blob/v1.3.0/contracts/libraries/NFTSVG.sol) | None (copied verbatim) |
-| `HexStrings.sol` | [Uniswap v1.3.0](https://github.com/Uniswap/v3-periphery/blob/v1.3.0/contracts/libraries/HexStrings.sol) | None (copied verbatim) |
+JuiceSwap V3 deploys Uniswap V3 contracts with branding modifications to NFT-facing elements:
 
-All contracts include attribution headers with source URLs and commit hash (`80f26c86c57b8a5e4b913f42844d4c8bd274d058`) for verification.
+### Branding Changes
 
-All other contracts (Factory, Pool, SwapRouter, Quoter, etc.) are imported directly from official `@uniswap` packages without modification.
+**JuiceSwapNonfungiblePositionManager.sol** (contracts/JuiceSwapNonfungiblePositionManager.sol:86)
+- NFT name: `'Uniswap V3 Positions NFT-V1'` → `'JuiceSwap V3 Positions NFT-V1'`
+- NFT symbol: `'UNI-V3-POS'` → `'JUICE-V3-POS'`
+- Source: [Uniswap v1.3.0](https://github.com/Uniswap/v3-periphery/blob/v1.3.0/contracts/NonfungiblePositionManager.sol)
+
+**NFTDescriptor.sol** (contracts/libraries/NFTDescriptor.sol:123, :171)
+- Description text: `'...in a Uniswap V3 '` → `'...in a JuiceSwap V3 '`
+- NFT name prefix: `'Uniswap - '` → `'JuiceSwap - '`
+- Source: [Uniswap v1.3.0](https://github.com/Uniswap/v3-periphery/blob/v1.3.0/contracts/libraries/NFTDescriptor.sol)
+
+**Supporting Libraries** (copied verbatim, no modifications)
+- NFTSVG.sol - [Source](https://github.com/Uniswap/v3-periphery/blob/v1.3.0/contracts/libraries/NFTSVG.sol)
+- HexStrings.sol - [Source](https://github.com/Uniswap/v3-periphery/blob/v1.3.0/contracts/libraries/HexStrings.sol)
+
+All contracts include attribution headers with source URLs and commit hash `80f26c86c57b8a5e4b913f42844d4c8bd274d058`.
+
+**Total modifications:** 4 string literals affecting NFT metadata display only.
+
+### Unchanged Components
+
+All core DEX logic imported from official @uniswap packages:
+- UniswapV3Factory, UniswapV3Pool (from @uniswap/v3-core@1.0.0)
+- SwapRouter02, QuoterV2 (from @uniswap/swap-router-contracts@1.1.0)
+- All base contracts, interfaces, libraries (from @uniswap/v3-periphery@1.1.1)
+
+For detailed implementation and maintenance instructions, see [JUICESWAP_BRANDING.md](./JUICESWAP_BRANDING.md).
 
 ## Licensing
 
@@ -49,15 +69,48 @@ Please ensure compliance with Uniswap's licensing terms and any chain-specific d
 npm install
 ```
 
-## Usage
+## Configuration
 
-Deploy JuiceSwap V3 to any EVM-compatible network:
+Create a `.env` file in the project root:
 
 ```bash
+# Required
+PRIVATE_KEY=0xyour_private_key_here
+WETH9_ADDRESS=0x...  # WETH9 contract address on target chain
+OWNER_ADDRESS=0x...   # Address that will own the deployed contracts
+
+# Optional
+NATIVE_CURRENCY_LABEL=cBTC  # Default: "cBTC"
+V2_FACTORY_ADDRESS=0x...     # V2 factory for swap router (optional)
+GAS_PRICE=50                 # Gas price in GWEI (optional)
+```
+
+## Usage
+
+### Recommended: Hardhat Deployment
+
+Deploy JuiceSwap V3 using Hardhat:
+
+```bash
+# For fresh deployment (optional - removes network-specific state files)
+rm state.*.json
+
+# Deploy to Citrea testnet
+npx hardhat run scripts/deploy.ts --network citreaTestnet
+
+# Or deploy to other networks defined in hardhat.config.ts
 npx hardhat run scripts/deploy.ts --network <network-name>
 ```
 
-Or use the CLI directly:
+**Benefits:**
+- ✅ Configuration from `.env` and `hardhat.config.ts`
+- ✅ No long CLI commands
+- ✅ Better Node.js compatibility
+- ✅ Standard Hardhat workflow
+
+### Alternative: CLI Deployment
+
+Or use the CLI directly with manual arguments:
 
 ```bash
 npm start -- \
@@ -77,7 +130,7 @@ Options:
   -w9, --weth9-address <address>            Address of the WETH9 contract on this chain
   -ncl, --native-currency-label <string>    Native currency label (e.g. "ETH", "cBTC")
   -o, --owner-address <address>             Contract address that will own the deployed artifacts
-  -s, --state <path>                        Path to JSON file containing migrations state (default: "./state.json")
+  -s, --state <path>                        Path to JSON file containing migrations state (default: "./state.{chainId}.json")
   -v2, --v2-core-factory-address <address>  V2 core factory address for swap router (optional)
   -g, --gas-price <number>                  Gas price in GWEI for each transaction (optional)
   -c, --confirmations <number>              Confirmations to wait after each transaction (default: "2")
@@ -106,11 +159,11 @@ The deployment executes these migrations in order:
 
 ### State Management
 
-Migration state is saved in `state.json` (or path specified with `--state`). This allows resuming interrupted deployments.
+Migration state is saved in network-specific files: `state.{network}.json` (e.g., `state.localhost.json`, `state.citreaTestnet.json`). This allows resuming interrupted deployments and managing multiple network deployments simultaneously.
 
-**For fresh deployment:** Delete `state.json` before running.
+**For fresh deployment:** Delete the network-specific state file (e.g., `rm state.citreaTestnet.json`) before running.
 
-**To resume deployment:** Keep `state.json` and re-run the command.
+**To resume deployment:** Keep the state file and re-run the command - deployment will continue from the last completed step.
 
 ### Gas Estimates
 
@@ -146,7 +199,7 @@ After deployment, verify contracts on block explorers:
 npx hardhat verify --network <network> <contract-address> <constructor-args>
 ```
 
-The deployment addresses are saved in `state.json`.
+The deployment addresses are saved in network-specific state files (e.g., `state.citreaTestnet.json`).
 
 ## Security Audit
 
@@ -225,7 +278,7 @@ deploy-v3/
 │   ├── deploy.ts                                (Deployment orchestration)
 │   └── steps/                                   (Individual deployment steps)
 ├── artifacts/                                   (Compiled contracts)
-├── state.json                                   (Deployment state)
+├── state.{network}.json                         (Network-specific deployment state)
 └── hardhat.config.ts                           (Compiler configuration)
 ```
 
