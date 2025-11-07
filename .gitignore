@@ -37,7 +37,11 @@ bower_components
 .lock-wscript
 
 # Compiled binary addons (https://nodejs.org/api/addons.html)
-build/Release
+build/
+
+# Compiled contract artifacts
+*.abi
+*.bin
 
 # Dependency directories
 node_modules/
@@ -123,3 +127,6 @@ deployment-wallet.json
 # Standardized deployment structure
 deployments/localhost/
 deployments/hardhat/
+
+# Test/demo scripts and example data
+scripts/examples/
