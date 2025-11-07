@@ -17,7 +17,7 @@
     "compile": "npx hardhat compile",
     "node": "npx hardhat node",
     "deploy:local": "npx hardhat run scripts/deploy.ts --network localhost",
-    "deploy:citrea-testnet": "npx hardhat run scripts/deploy.ts --network citreaTestnet",
+    "deploy:testnet": "npx hardhat run scripts/deploy.ts --network citreaTestnet",
     "test:ecosystem": "hardhat run scripts/integration/fullEcosystemTest.ts --network localhost"
   },
   "files": [
