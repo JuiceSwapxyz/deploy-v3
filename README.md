@@ -201,6 +201,53 @@ npx hardhat verify --network <network> <contract-address> <constructor-args>
 
 The deployment addresses are saved in network-specific state files (e.g., `state.citreaTestnet.json`).
 
+### Full Ecosystem Integration Test
+
+Test the complete JUICE ecosystem (JUSD Protocol + JuiceSwap DEX + Governance) on localhost:
+
+```bash
+# Terminal 1: Start local Hardhat node
+npx hardhat node
+
+# Terminal 2: Run full ecosystem test
+npm run test:ecosystem
+```
+
+**What it tests:**
+- JUSD Protocol deployment (stablecoin + JUICE equity token)
+- JuiceSwap DEX deployment (Factory, Router, PositionManager)
+- Governance deployment (Governor + FeeCollector)
+- Ownership transfer verification
+- Pool creation (JUICE/JUSD)
+- Liquidity provision
+- Swap execution
+
+Results saved to `/tmp/ecosystem-test.log`.
+
+**Folder Structure:**
+
+The integration test uses production deployment scripts from external repositories. Default folder structure:
+
+```
+JuiceSwapXyz/
+├── JuiceDollar/
+│   └── smartContracts/          # JUSD deployment scripts
+├── deploy-v3/                    # This repo (JuiceSwap DEX)
+└── smart-contracts/              # Governance deployment scripts
+```
+
+**Path Overrides:**
+
+If your folder structure differs, override paths in `.env`:
+
+```bash
+# Optional: Override integration test repo paths
+JUSD_REPO_PATH=/path/to/JuiceDollar/smartContracts
+GOVERNANCE_REPO_PATH=/path/to/JuiceSwap/smart-contracts
+```
+
+See `.env.example` for complete configuration options.
+
 ## Security Audit
 
 **Audit Risk: ZERO**

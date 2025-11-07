@@ -79,21 +79,46 @@ async function main() {
   console.log(`  V2 Factory: ${v2CoreFactoryAddress}`)
   console.log(`  Gas Price: ${gasPrice || 'auto'} GWEI\n`)
 
-  // Load existing deployment state (network-specific using network name)
-  const stateFileName = `state.${networkName}.json`
-  const stateFilePath = path.join(__dirname, '..', stateFileName)
+  // Load existing deployment state using standardized structure
+  const deploymentDir = path.join(__dirname, '..', 'deployments', networkName)
+  const stateFilePath = path.join(deploymentDir, 'dex.json')
   let initialState: MigrationState = {}
 
-  if (fs.existsSync(stateFilePath)) {
-    console.log(`📋 Loading existing deployment state from ${stateFileName}\n`)
-    initialState = JSON.parse(fs.readFileSync(stateFilePath, 'utf8'))
-  } else {
-    console.log(`📋 Starting fresh deployment (no existing ${stateFileName})\n`)
+  // Create deployment directory if it doesn't exist
+  if (!fs.existsSync(deploymentDir)) {
+    fs.mkdirSync(deploymentDir, { recursive: true })
   }
 
-  // State change handler - saves to network-specific state file after each step
+  if (fs.existsSync(stateFilePath)) {
+    console.log(`📋 Loading existing deployment state from deployments/${networkName}/dex.json\n`)
+    const savedData = JSON.parse(fs.readFileSync(stateFilePath, 'utf8'))
+    // Extract state from standardized schema
+    initialState = savedData.contracts || {}
+  } else {
+    console.log(`📋 Starting fresh deployment (no existing deployments/${networkName}/dex.json)\n`)
+  }
+
+  // State change handler - saves to standardized deployment file after each step
   const onStateChange = async (newState: MigrationState) => {
-    fs.writeFileSync(stateFilePath, JSON.stringify(newState, null, 2))
+    const deploymentInfo = {
+      schemaVersion: '1.0',
+      network: {
+        name: networkName,
+        chainId: chainId
+      },
+      deployment: {
+        deployedAt: new Date().toISOString(),
+        deployedBy: signer.address,
+        blockNumber: await ethers.provider.getBlockNumber()
+      },
+      contracts: newState,
+      metadata: {
+        deployer: 'JuiceSwapXyz/deploy-v3',
+        deploymentMethod: 'incremental-migration',
+        scriptVersion: '1.0.0'
+      }
+    }
+    fs.writeFileSync(stateFilePath, JSON.stringify(deploymentInfo, null, 2))
   }
 
   // Convert native currency label to bytes32
@@ -159,7 +184,7 @@ async function main() {
       console.error(`  Data: ${error.transaction.data?.slice(0, 66)}...`)
     }
 
-    console.error(`\n💡 Deployment state saved to ${stateFileName}`)
+    console.error(`\n💡 Deployment state saved to ${stateFilePath}`)
     console.error('   You can resume by running the command again.\n')
 
     throw error

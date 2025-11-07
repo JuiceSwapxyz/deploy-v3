@@ -13,6 +13,11 @@ const config: HardhatUserConfig = {
       },
     },
   },
+  paths: {
+    sources: "./contracts", // Only compile contracts in this directory
+    cache: "./cache",
+    artifacts: "./artifacts",
+  },
   networks: {
     hardhat: {
       chainId: 1337,
