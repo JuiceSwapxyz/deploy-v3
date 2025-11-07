@@ -130,3 +130,6 @@ deployments/hardhat/
 
 # Test/demo scripts and example data
 scripts/examples/
+
+# Use yarn, not npm
+package-lock.json

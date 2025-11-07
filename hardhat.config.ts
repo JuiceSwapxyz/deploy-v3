@@ -1,6 +1,6 @@
 import { HardhatUserConfig } from "hardhat/config";
 import "@nomiclabs/hardhat-ethers";
-import "@nomiclabs/hardhat-etherscan";
+import "@nomicfoundation/hardhat-verify";
 import { getPrivateKey } from "./src/util/wallet";
 
 const config: HardhatUserConfig = {
@@ -37,7 +37,7 @@ const config: HardhatUserConfig = {
   },
   etherscan: {
     apiKey: {
-      citreaTestnet: "placeholder", // Citrea doesn't require API key
+      citreaTestnet: "no-api-key-needed",
     },
     customChains: [
       {
@@ -49,6 +49,9 @@ const config: HardhatUserConfig = {
         },
       },
     ],
+  },
+  sourcify: {
+    enabled: true,
   },
 };
 
