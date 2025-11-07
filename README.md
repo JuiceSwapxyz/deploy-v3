@@ -1,95 +1,347 @@
-# Deploy Uniswap V3 Script
+# JuiceSwap V3 Deployment
 
-This package includes a CLI script for deploying the latest Uniswap V3 smart contracts to any EVM (Ethereum Virtual Machine) compatible network.
+This package deploys JuiceSwap V3 - a branded fork of Uniswap V3 Protocol with cosmetic branding changes to user-facing NFT elements. All core DEX logic remains unchanged from the battle-tested Uniswap V3 codebase.
+
+## What is JuiceSwap?
+
+JuiceSwap V3 is functionally identical to Uniswap V3, with branding applied only to NFT position tokens that users see in their wallets and on NFT marketplaces. The concentrated liquidity AMM logic, mathematical operations, fee calculations, and security properties are 100% vanilla Uniswap V3.
+
+**What Changed:**
+- NFT name: "Uniswap V3 Positions NFT-V1" → "JuiceSwap V3 Positions NFT-V1"
+- NFT symbol: "UNI-V3-POS" → "JUICE-V3-POS"
+- NFT metadata: "Uniswap" text → "JuiceSwap" in descriptions and titles
+
+**What Remains Unchanged:**
+- All core AMM logic (pools, swaps, liquidity management)
+- All mathematical operations and fee calculations
+- All security boundaries and access controls
+- All base contracts imported from official `@uniswap` packages
+
+## Modified Contracts
+
+JuiceSwap V3 deploys Uniswap V3 contracts with branding modifications to NFT-facing elements:
+
+### Branding Changes
+
+**JuiceSwapNonfungiblePositionManager.sol** (contracts/JuiceSwapNonfungiblePositionManager.sol:86)
+- NFT name: `'Uniswap V3 Positions NFT-V1'` → `'JuiceSwap V3 Positions NFT-V1'`
+- NFT symbol: `'UNI-V3-POS'` → `'JUICE-V3-POS'`
+- Source: [Uniswap v1.3.0](https://github.com/Uniswap/v3-periphery/blob/v1.3.0/contracts/NonfungiblePositionManager.sol)
+
+**NFTDescriptor.sol** (contracts/libraries/NFTDescriptor.sol:123, :171)
+- Description text: `'...in a Uniswap V3 '` → `'...in a JuiceSwap V3 '`
+- NFT name prefix: `'Uniswap - '` → `'JuiceSwap - '`
+- Source: [Uniswap v1.3.0](https://github.com/Uniswap/v3-periphery/blob/v1.3.0/contracts/libraries/NFTDescriptor.sol)
+
+**Supporting Libraries** (copied verbatim, no modifications)
+- NFTSVG.sol - [Source](https://github.com/Uniswap/v3-periphery/blob/v1.3.0/contracts/libraries/NFTSVG.sol)
+- HexStrings.sol - [Source](https://github.com/Uniswap/v3-periphery/blob/v1.3.0/contracts/libraries/HexStrings.sol)
+
+All contracts include attribution headers with source URLs and commit hash `80f26c86c57b8a5e4b913f42844d4c8bd274d058`.
+
+**Total modifications:** 4 string literals affecting NFT metadata display only.
+
+### Unchanged Components
+
+All core DEX logic imported from official @uniswap packages:
+- UniswapV3Factory, UniswapV3Pool (from @uniswap/v3-core@1.0.0)
+- SwapRouter02, QuoterV2 (from @uniswap/swap-router-contracts@1.1.0)
+- All base contracts, interfaces, libraries (from @uniswap/v3-periphery@1.1.1)
+
+For detailed implementation and maintenance instructions, see [JUICESWAP_BRANDING.md](./JUICESWAP_BRANDING.md).
 
 ## Licensing
 
-Please note that Uniswap V3 is under [BUSL license](https://github.com/Uniswap/v3-core#licensing) until the Change Date, currently 2023-04-01. Exceptions to the license may be specified by Uniswap Governance via Additional Use Grants, which can, for example, allow V3 to be deployed on new chains. Please follow the [Uniswap Governance process](https://gov.uniswap.org/t/community-governance-process/7732) to request a DAO vote for exceptions to the license, or to move up the Change Date.
+As a derivative work of Uniswap V3, JuiceSwap is subject to the [BUSL 1.1 license](https://github.com/Uniswap/v3-core/blob/main/LICENSE). The Uniswap V3 Core license expired on April 1, 2023, converting to GPL-2.0-or-later. The periphery contracts (NonfungiblePositionManager, SwapRouter, etc.) remain under GPL-2.0-or-later.
 
-License changes must be enacted via the [ENS domain](https://ens.domains/) uniswap.eth, which is controlled by Uniswap Governance. This means (among other things) that Governance has the power to associate arbitrary text with any subdomain of the form X.uniswap.eth. Modifications of the Change Date should be specified at v3-core-license-date.uniswap.eth, and Additional Use Grants should be specified at v3-core-license-grants.uniswap.eth. The process for associating text with a subdomain is detailed below:
+Please ensure compliance with Uniswap's licensing terms and any chain-specific deployment grants. For new chain deployments, follow the [Uniswap Governance process](https://gov.uniswap.org/t/community-governance-process/7732) if required.
 
-1. If the subdomain does not already exist (which can be [checked at this URL](https://app.ens.domains/name/uniswap.eth/subdomains)), the [`setSubnodeRecord`](https://docs.ens.domains/contract-api-reference/ens#set-subdomain-record) function of the ENS registry should be called with the following arguments:
+## Prerequisites
 
-- `node`: `namehash('uniswap.eth')` (`0xa2a03459171c76bff45817330c10ef9f8af07011a33005b73b50189bbc7e7132`)
-- `label`: `keccak256('v3-core-license-date')` (`0xee55740591b0fd5d7a28a6edc49567f6ff3febbe942ec0e2fa49ee536595085b`) or `keccak256('v3-core-license-grants')` (`0x15ff9b5bd7642701a10e5ea8fb29c957ffda4854cd028e9f6218506e6b509af2`)
-- `owner`: [`0x1a9C8182C09F50C8318d769245beA52c32BE35BC`](https://etherscan.io/address/0x1a9c8182c09f50c8318d769245bea52c32be35bc), the Uniswap Governance Timelock
-- `resolver`: [`0x4976fb03c32e5b8cfe2b6ccb31c09ba78ebaba41`](https://etherscan.io/address/0x4976fb03c32e5b8cfe2b6ccb31c09ba78ebaba41), the public ENS resolver.
-- `ttl`: `0`
+- Node.js >= 14
+- Funded wallet with private key for deployment
+- RPC endpoint for target network
+- WETH9 contract address on target chain
 
-2. Then, the [`setText`](https://docs.ens.domains/contract-api-reference/publicresolver#set-text-data) function of the public resolver should be called with the following arguments:
+## Installation
 
-- `node`: `namehash('v3-core-license-date.uniswap.eth')` (`0x0505ec7822d61b4cfb294f137d1a7f0ceedf162f555a4bf2f4be58a07cf266c5`) or `namehash('v3-core-license-grants.uniswap.eth')` (`0xa35d592ec6e5289a387cba1d5f82be794f495bd5a361a1fb314687c6aefea1f4`)
-- `key`: A suitable label, such as `notice`.
-- `value`: The text of the change. Note that text may already be associated with the subdomain in question. If it does, it can be reviewed at the following URLs for either [v3-core-license-date](https://app.ens.domains/name/v3-core-license-date.uniswap.eth/details) or [v3-core-license-grants](https://app.ens.domains/name/v3-core-license-grants.uniswap.eth/details), and appended to as desired.
+```bash
+npm install
+```
 
-Note: [`setContentHash`](https://docs.ens.domains/contract-api-reference/publicresolver#set-content-hash) may also be used to associate text with a subdomain, but `setText` is presented above for simplicity.
+## Configuration
 
-These contract function calls should ultimately be encoded into a governance proposal, about which more details are available [here](https://docs.uniswap.org/protocol/concepts/governance/overview).
+Create a `.env` file in the project root:
+
+```bash
+# Required
+PRIVATE_KEY=0xyour_private_key_here
+WETH9_ADDRESS=0x...  # WETH9 contract address on target chain
+OWNER_ADDRESS=0x...   # Address that will own the deployed contracts
+
+# Optional
+NATIVE_CURRENCY_LABEL=cBTC  # Default: "cBTC"
+V2_FACTORY_ADDRESS=0x...     # V2 factory for swap router (optional)
+GAS_PRICE=50                 # Gas price in GWEI (optional)
+```
 
 ## Usage
 
-This package vends a CLI for executing a deployment script that results in a full deployment of Uniswap Protocol v3.
-Get the arguments for running the latest version of the script via `npx @uniswap/deploy-v3 --help`.
+### Recommended: Hardhat Deployment
 
-As of `v1.0.3` the arguments are:
+Deploy JuiceSwap V3 using Hardhat:
 
-```text
-> npx @uniswap/deploy-v3 --help
-Usage: npx @uniswap/deploy-v3 [options]
+```bash
+# For fresh deployment (optional - removes network-specific state files)
+rm state.*.json
 
+# Deploy to Citrea testnet
+npx hardhat run scripts/deploy.ts --network citreaTestnet
+
+# Or deploy to other networks defined in hardhat.config.ts
+npx hardhat run scripts/deploy.ts --network <network-name>
+```
+
+**Benefits:**
+- ✅ Configuration from `.env` and `hardhat.config.ts`
+- ✅ No long CLI commands
+- ✅ Better Node.js compatibility
+- ✅ Standard Hardhat workflow
+
+### Alternative: CLI Deployment
+
+Or use the CLI directly with manual arguments:
+
+```bash
+npm start -- \
+  --private-key <deployer-private-key> \
+  --json-rpc <rpc-url> \
+  --weth9-address <weth9-address> \
+  --native-currency-label <label> \
+  --owner-address <owner-address>
+```
+
+### CLI Arguments
+
+```
 Options:
   -pk, --private-key <string>               Private key used to deploy all contracts
   -j, --json-rpc <url>                      JSON RPC URL where the program should be deployed
   -w9, --weth9-address <address>            Address of the WETH9 contract on this chain
-  -ncl, --native-currency-label <string>    Native currency label, e.g. ETH
-  -o, --owner-address <address>             Contract address that will own the deployed artifacts after the script runs
-  -s, --state <path>                        Path to the JSON file containing the migrations state (optional) (default: "./state.json")
-  -v2, --v2-core-factory-address <address>  The V2 core factory address used in the swap router (optional)
-  -g, --gas-price <number>                  The gas price to pay in GWEI for each transaction (optional)
-  -c, --confirmations <number>              How many confirmations to wait for after each transaction (optional) (default: "2")
-  -V, --version                             output the version number
-  -h, --help                                display help for command
+  -ncl, --native-currency-label <string>    Native currency label (e.g. "ETH", "cBTC")
+  -o, --owner-address <address>             Contract address that will own the deployed artifacts
+  -s, --state <path>                        Path to JSON file containing migrations state (default: "./state.{chainId}.json")
+  -v2, --v2-core-factory-address <address>  V2 core factory address for swap router (optional)
+  -g, --gas-price <number>                  Gas price in GWEI for each transaction (optional)
+  -c, --confirmations <number>              Confirmations to wait after each transaction (default: "2")
+  -V, --version                             Output version number
+  -h, --help                                Display help
 ```
 
-The script runs a set of migrations, each migration deploying a contract or executing a transaction. Migration state is
-saved in a JSON file at the supplied path (by default `./state.json`).
+### Deployment Steps
 
-To use the script, you must fund an address, and pass the private key of that address to the script so that it can construct
-and broadcast the deployment transactions.
+The deployment executes these migrations in order:
 
-The block explorer verification process (e.g. Etherscan) is specific to the network. For the existing deployments,
-we have used the `@nomiclabs/hardhat-etherscan` hardhat plugin in the individual repositories to verify the deployment addresses.
+1. **UniswapV3Factory** - Core factory for creating pools
+2. **Fee tier setup** - Enable 1 basis point fee tier
+3. **Multicall2** - Batch transaction execution
+4. **ProxyAdmin** - Proxy administration
+5. **TickLens** - Read tick data
+6. **JuiceSwap NFTDescriptor Library** - Branded NFT metadata generation
+7. **NonfungibleTokenPositionDescriptor** - Links descriptor library
+8. **TransparentUpgradeableProxy** - Upgradeable descriptor proxy
+9. **JuiceSwap NonfungiblePositionManager** - Branded NFT position manager
+10. **V3Migrator** - Migrate from V2 positions
+11. **V3Staker** - Liquidity mining
+12. **QuoterV2** - Quote exact output amounts
+13. **SwapRouter02** - Execute swaps with advanced features
+14. **Ownership transfers** - Transfer admin rights to owner
 
-Note that in between deployment steps, the script waits for confirmations. By default, this is set to `2`. If the network
-only mines blocks when the transactions is queued (e.g. a local testnet), you must set confirmations to `0`.
+### State Management
+
+Migration state is saved in network-specific files: `state.{network}.json` (e.g., `state.localhost.json`, `state.citreaTestnet.json`). This allows resuming interrupted deployments and managing multiple network deployments simultaneously.
+
+**For fresh deployment:** Delete the network-specific state file (e.g., `rm state.citreaTestnet.json`) before running.
+
+**To resume deployment:** Keep the state file and re-run the command - deployment will continue from the last completed step.
+
+### Gas Estimates
+
+Expect **30-40M gas** for full deployment (14 transactions).
+
+### Confirmations
+
+Set `--confirmations 0` for networks that only mine blocks when transactions are queued (e.g., local testnets).
+
+For production networks, use `--confirmations 2` (default) or higher.
 
 ## Development
 
-To run unit tests, run `yarn test`.
+### Compile Contracts
 
-For testing the script, run `yarn start`.
+```bash
+npx hardhat compile
+```
 
-To publish the script, first create a version: `npm version <version identifier>`, then publish via `npm publish`.
-Don't forget to push your tagged commit!
+Contracts are compiled with Solidity 0.7.6 and optimizer enabled (1,000,000 runs) to match Uniswap production settings.
+
+### Run Tests
+
+```bash
+npm test
+```
+
+### Verify Contracts
+
+After deployment, verify contracts on block explorers:
+
+```bash
+npx hardhat verify --network <network> <contract-address> <constructor-args>
+```
+
+The deployment addresses are saved in network-specific state files (e.g., `state.citreaTestnet.json`).
+
+### Full Ecosystem Integration Test
+
+Test the complete JUICE ecosystem (JUSD Protocol + JuiceSwap DEX + Governance) on localhost:
+
+```bash
+# Terminal 1: Start local Hardhat node
+npx hardhat node
+
+# Terminal 2: Run full ecosystem test
+npm run test:ecosystem
+```
+
+**What it tests:**
+- JUSD Protocol deployment (stablecoin + JUICE equity token)
+- JuiceSwap DEX deployment (Factory, Router, PositionManager)
+- Governance deployment (Governor + FeeCollector)
+- Ownership transfer verification
+- Pool creation (JUICE/JUSD)
+- Liquidity provision
+- Swap execution
+
+Results saved to `/tmp/ecosystem-test.log`.
+
+**Folder Structure:**
+
+The integration test uses production deployment scripts from external repositories. Default folder structure:
+
+```
+JuiceSwapXyz/
+├── JuiceDollar/
+│   └── smartContracts/          # JUSD deployment scripts
+├── deploy-v3/                    # This repo (JuiceSwap DEX)
+└── smart-contracts/              # Governance deployment scripts
+```
+
+**Path Overrides:**
+
+If your folder structure differs, override paths in `.env`:
+
+```bash
+# Optional: Override integration test repo paths
+JUSD_REPO_PATH=/path/to/JuiceDollar/smartContracts
+GOVERNANCE_REPO_PATH=/path/to/JuiceSwap/smart-contracts
+```
+
+See `.env.example` for complete configuration options.
+
+## Security Audit
+
+**Audit Risk: ZERO**
+
+The branding modifications are cosmetic string literals only. They do not affect:
+- Smart contract execution logic
+- State transitions or storage
+- Mathematical calculations
+- Fee mechanisms
+- Security boundaries
+- Access controls
+
+JuiceSwap inherits all security properties from Uniswap V3, which has:
+- Multiple professional security audits
+- $100B+ total value locked (TVL) historically
+- 3+ years of battle-testing in production
+
+## Verification
+
+After deployment, verify the branding:
+
+```javascript
+// NFT Collection Name
+await nonfungiblePositionManager.name()
+// Returns: "JuiceSwap V3 Positions NFT-V1"
+
+// NFT Symbol
+await nonfungiblePositionManager.symbol()
+// Returns: "JUICE-V3-POS"
+
+// NFT Metadata (decode base64)
+const tokenURI = await nonfungiblePositionManager.tokenURI(tokenId)
+// Description contains "JuiceSwap V3"
+// Name starts with "JuiceSwap -"
+```
 
 ## FAQs
 
-### How much gas should I expect to use for full completion?
+### Why fork Uniswap V3?
 
-We estimate 30M - 40M gas needed to run the full deploy script.
+JuiceSwap provides chain-specific branding for user-facing elements while maintaining 100% compatibility with the proven Uniswap V3 codebase. This approach minimizes security risk while enabling brand differentiation.
 
-### When I run the script, it says "Contract was already deployed..."
+### Can I verify the contracts match Uniswap?
 
-Delete `state.json` before a fresh deploy. `state.json` tracks which steps have already occurred. If there are any entries, the deploy script will attempt to pick up from the last step in `state.json`.
+Yes! All modified contracts include headers with:
+- Source URL pointing to exact Uniswap v1.3.0 files
+- Commit hash (80f26c86c57b8a5e4b913f42844d4c8bd274d058)
+- Line-by-line documentation of all changes
 
-### Where can I see all the addresses where each contract is deployed?
+Compare the contracts directly on GitHub to verify only branding strings changed.
 
-Check out `state.json`. It'll show you the final deployed addresses.
+### Will this work with existing Uniswap tooling?
 
-### How long will the script take?
+Yes! JuiceSwap is ABI-compatible with Uniswap V3. Frontend interfaces, SDKs, and tools designed for Uniswap V3 will work with JuiceSwap with only configuration changes (contract addresses).
 
-Depends on the confirmation times and gas parameter. The deploy script sends up to a total of 14 transactions.
+### What about upgrades?
 
-### Where should I ask questions or report issues?
+The NonfungibleTokenPositionDescriptor is deployed behind a TransparentUpgradeableProxy, allowing metadata updates via governance (owner address). Core pool contracts are immutable, exactly like Uniswap.
 
-You can file them in `issues` on this repo and we'll try our best to respond.
+### How do I get support?
+
+File issues in this repository or consult the [Uniswap V3 documentation](https://docs.uniswap.org/protocol/introduction) for protocol-level questions.
+
+## Repository Structure
+
+```
+deploy-v3/
+├── contracts/
+│   ├── JuiceSwapNonfungiblePositionManager.sol  (Modified)
+│   └── libraries/
+│       ├── NFTDescriptor.sol                     (Modified)
+│       ├── NFTSVG.sol                           (Copied)
+│       └── HexStrings.sol                       (Copied)
+├── src/
+│   ├── deploy.ts                                (Deployment orchestration)
+│   └── steps/                                   (Individual deployment steps)
+├── artifacts/                                   (Compiled contracts)
+├── state.{network}.json                         (Network-specific deployment state)
+└── hardhat.config.ts                           (Compiler configuration)
+```
+
+## References
+
+- [Uniswap V3 Documentation](https://docs.uniswap.org/protocol/introduction)
+- [Uniswap V3 Core Repository](https://github.com/Uniswap/v3-core)
+- [Uniswap V3 Periphery Repository](https://github.com/Uniswap/v3-periphery)
+- [Original Deploy Script](https://github.com/Uniswap/deploy-v3)
+
+## License
+
+Modified contracts inherit their licenses from Uniswap V3:
+- Core contracts (Factory, Pool): GPL-2.0-or-later (BUSL expired April 1, 2023)
+- Periphery contracts: GPL-2.0-or-later
+- NFTDescriptor library: UNLICENSED
+- Supporting libraries: MIT / GPL-2.0-or-later
+
+All modifications are minimal branding changes only. See contract headers for complete attribution.

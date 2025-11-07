@@ -1,0 +1,15 @@
+{
+  "network": "Citrea Testnet",
+  "chainId": 5115,
+  "deploymentDate": "2025-09-16T14:07:29.088Z",
+  "tokenAddress": "0x2fFC18aC99D367b70dd922771dF8c2074af4aCE0",
+  "transactionHash": "0x56655770f42d26a98bd92ee2cefeda67818a4247b087e9d09d0f9dacfefc8355",
+  "deployer": "0xc89E49490020fc4e8eE681553A2354234Fc3F1D4",
+  "tokenDetails": {
+    "name": "cUSD",
+    "symbol": "cUSD",
+    "decimals": 18,
+    "totalSupply": "1000000000000000000000000",
+    "initialHolder": "0xc89E49490020fc4e8eE681553A2354234Fc3F1D4"
+  }
+}

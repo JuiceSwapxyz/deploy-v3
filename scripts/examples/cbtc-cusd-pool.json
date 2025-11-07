@@ -1,0 +1,20 @@
+{
+  "network": "Citrea Testnet",
+  "chainId": 5115,
+  "deploymentDate": "2025-09-16T14:22:57.193Z",
+  "poolAddress": "0xA69De906B9A830Deb64edB97B2eb0848139306d2",
+  "token0": {
+    "address": "0x2fFC18aC99D367b70dd922771dF8c2074af4aCE0",
+    "symbol": "cUSD",
+    "amount": "10000.0"
+  },
+  "token1": {
+    "address": "0x4370e27F7d91D9341bFf232d7Ee8bdfE3a9933a0",
+    "symbol": "WCBTC",
+    "amount": "0.1"
+  },
+  "feeTier": 3000,
+  "positionNFT": "2",
+  "transactionHash": "0x84c6ac500653d3298bbd0ea4b2769621864220b29f4bec7ca099f13c33c2df94",
+  "creator": "0xc89E49490020fc4e8eE681553A2354234Fc3F1D4"
+}
