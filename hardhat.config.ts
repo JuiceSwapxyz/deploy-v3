@@ -32,6 +32,7 @@ const config: HardhatUserConfig = {
       url: "https://rpc.testnet.citrea.xyz",
       chainId: 5115,
       accounts: getPrivateKey() ? [getPrivateKey()!] : [],
+      timeout: 300_000,
     },
   },
   etherscan: {

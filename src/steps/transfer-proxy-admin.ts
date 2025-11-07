@@ -2,7 +2,10 @@ import ProxyAdmin from '@openzeppelin/contracts/build/contracts/ProxyAdmin.json'
 import { Contract } from '@ethersproject/contracts'
 import { MigrationStep } from '../migrations'
 
-export const TRANSFER_PROXY_ADMIN: MigrationStep = async (state, { signer, gasPrice, ownerAddress }) => {
+export const TRANSFER_PROXY_ADMIN: MigrationStep = async (
+  state,
+  { signer, maxFeePerGas, maxPriorityFeePerGas, ownerAddress }
+) => {
   if (state.proxyAdminAddress === undefined) {
     throw new Error('Missing ProxyAdmin')
   }
@@ -21,7 +24,10 @@ export const TRANSFER_PROXY_ADMIN: MigrationStep = async (state, { signer, gasPr
     throw new Error('ProxyAdmin.owner is not signer')
   }
 
-  const tx = await proxyAdmin.transferOwnership(ownerAddress, { gasPrice })
+  const tx = await proxyAdmin.transferOwnership(ownerAddress, {
+    maxFeePerGas,
+    maxPriorityFeePerGas,
+  })
 
   return [
     {

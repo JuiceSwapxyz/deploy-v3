@@ -2,7 +2,10 @@ import UniswapV3Factory from '@uniswap/v3-core/artifacts/contracts/UniswapV3Fact
 import { Contract } from '@ethersproject/contracts'
 import { MigrationStep } from '../migrations'
 
-export const TRANSFER_V3_CORE_FACTORY_OWNER: MigrationStep = async (state, { signer, gasPrice, ownerAddress }) => {
+export const TRANSFER_V3_CORE_FACTORY_OWNER: MigrationStep = async (
+  state,
+  { signer, maxFeePerGas, maxPriorityFeePerGas, ownerAddress }
+) => {
   if (state.v3CoreFactoryAddress === undefined) {
     throw new Error('Missing JuiceSwapV3Factory')
   }
@@ -21,7 +24,10 @@ export const TRANSFER_V3_CORE_FACTORY_OWNER: MigrationStep = async (state, { sig
     throw new Error('JuiceSwapV3Factory.owner is not signer')
   }
 
-  const tx = await v3CoreFactory.setOwner(ownerAddress, { gasPrice })
+  const tx = await v3CoreFactory.setOwner(ownerAddress, {
+    maxFeePerGas,
+    maxPriorityFeePerGas,
+  })
 
   return [
     {
