@@ -21,7 +21,8 @@ export type StepOutput = { message: string; hash?: string; address?: string }
 
 export type MigrationConfig = {
   signer: Signer
-  gasPrice: BigNumber | undefined
+  maxFeePerGas: BigNumber
+  maxPriorityFeePerGas: BigNumber
   weth9Address: string
   nativeCurrencyLabelBytes: string
   v2CoreFactoryAddress: string

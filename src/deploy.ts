@@ -1,5 +1,6 @@
 import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
+import { parseUnits } from '@ethersproject/units'
 import { migrate } from './migrate'
 import { MigrationState, MigrationStep, StepOutput } from './migrations'
 import { ADD_1BP_FEE_TIER } from './steps/add-1bp-fee-tier'
@@ -39,7 +40,8 @@ const MIGRATION_STEPS: MigrationStep[] = [
 
 export default function deploy({
   signer,
-  gasPrice: numberGasPrice,
+  maxFeePerGas: maxFeePerGasGwei,
+  maxPriorityFeePerGas: maxPriorityFeePerGasGwei,
   initialState,
   onStateChange,
   weth9Address,
@@ -48,7 +50,8 @@ export default function deploy({
   ownerAddress,
 }: {
   signer: Signer
-  gasPrice: number | undefined
+  maxFeePerGas: string
+  maxPriorityFeePerGas: string
   weth9Address: string
   nativeCurrencyLabelBytes: string
   v2CoreFactoryAddress: string
@@ -56,12 +59,13 @@ export default function deploy({
   initialState: MigrationState
   onStateChange: (newState: MigrationState) => Promise<void>
 }): AsyncGenerator<StepOutput[], void, void> {
-  const gasPrice =
-    typeof numberGasPrice === 'number' ? BigNumber.from(numberGasPrice).mul(BigNumber.from(10).pow(9)) : undefined // convert to wei
+  // Convert from gwei string to BigNumber in wei
+  const maxFeePerGas = parseUnits(maxFeePerGasGwei, 'gwei')
+  const maxPriorityFeePerGas = parseUnits(maxPriorityFeePerGasGwei, 'gwei')
 
   return migrate({
     steps: MIGRATION_STEPS,
-    config: { gasPrice, signer, weth9Address, nativeCurrencyLabelBytes, v2CoreFactoryAddress, ownerAddress },
+    config: { maxFeePerGas, maxPriorityFeePerGas, signer, weth9Address, nativeCurrencyLabelBytes, v2CoreFactoryAddress, ownerAddress },
     initialState,
     onStateChange,
   })
