@@ -18,7 +18,7 @@
     "node": "npx hardhat node",
     "deploy:local": "npx hardhat run scripts/deploy.ts --network localhost",
     "deploy:testnet": "npx hardhat run scripts/deploy.ts --network citreaTestnet",
-    "verify:testnet": "DEPLOYMENT_FILE_PATH=./deployments/testnet/dex.json npx hardhat run scripts/verifyContracts.ts --network citreaTestnet",
+    "verify:testnet": "DEPLOYMENT_FILE_PATH=./deployments/citreaTestnet/dex.json npx hardhat run scripts/verifyContracts.ts --network citreaTestnet",
     "test:ecosystem": "hardhat run scripts/integration/fullEcosystemTest.ts --network localhost"
   },
   "files": [
