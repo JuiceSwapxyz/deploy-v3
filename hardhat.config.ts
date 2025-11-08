@@ -3,14 +3,55 @@ import "@nomiclabs/hardhat-ethers";
 import "@nomicfoundation/hardhat-verify";
 import { getPrivateKey } from "./src/util/wallet";
 
+// Compiler settings (matches Uniswap V3 production configuration)
+const DEFAULT_COMPILER_SETTINGS = {
+  version: "0.7.6",
+  settings: {
+    evmVersion: "istanbul",
+    optimizer: {
+      enabled: true,
+      runs: 1000000,
+    },
+    metadata: {
+      bytecodeHash: "none",
+    },
+  },
+};
+
+const LOW_OPTIMIZER_COMPILER_SETTINGS = {
+  version: "0.7.6",
+  settings: {
+    evmVersion: "istanbul",
+    optimizer: {
+      enabled: true,
+      runs: 2000,
+    },
+    metadata: {
+      bytecodeHash: "none",
+    },
+  },
+};
+
+const LOWEST_OPTIMIZER_COMPILER_SETTINGS = {
+  version: "0.7.6",
+  settings: {
+    evmVersion: "istanbul",
+    optimizer: {
+      enabled: true,
+      runs: 1000, // Matches Uniswap V3
+    },
+    metadata: {
+      bytecodeHash: "none",
+    },
+  },
+};
+
 const config: HardhatUserConfig = {
   solidity: {
-    version: "0.7.6",
-    settings: {
-      optimizer: {
-        enabled: true,
-        runs: 1000000,
-      },
+    compilers: [DEFAULT_COMPILER_SETTINGS],
+    overrides: {
+      "contracts/libraries/NFTDescriptor.sol": LOWEST_OPTIMIZER_COMPILER_SETTINGS,
+      "contracts/JuiceSwapNonfungiblePositionManager.sol": LOW_OPTIMIZER_COMPILER_SETTINGS,
     },
   },
   paths: {
