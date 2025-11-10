@@ -4,13 +4,12 @@ pragma abicoder v2;
 
 // Modified from Uniswap V3 Periphery v1.3.0
 // Source: https://github.com/Uniswap/v3-periphery/blob/v1.3.0/contracts/NonfungiblePositionManager.sol
-// Commit: 80f26c86c57b8a5e4b913f42844d4c8bd274d058
 // Changes:
-//   1. Line 86: Constructor NFT name changed from "Uniswap V3 Positions NFT-V1" to "JuiceSwap V3 Positions NFT-V1"
-//   2. Line 86: Constructor NFT symbol changed from "UNI-V3-POS" to "JUICE-V3-POS"
-//   3. Line 34: Contract renamed from "NonfungiblePositionManager" to "JuiceSwapNonfungiblePositionManager"
-//   4. Line 33: NatSpec comment updated from "Wraps Uniswap V3 positions" to "Wraps JuiceSwap V3 positions"
-//   5. Lines 20-30: Import paths changed from relative paths to @uniswap/v3-periphery package imports
+//   1. Line 85: Constructor NFT name changed from "Uniswap V3 Positions NFT-V1" to "JuiceSwap V3 Positions NFT-V1"
+//   2. Line 85: Constructor NFT symbol changed from "UNI-V3-POS" to "JUICE-V3-POS"
+//   3. Line 33: Contract renamed from "NonfungiblePositionManager" to "JuiceSwapNonfungiblePositionManager"
+//   4. Line 32: NatSpec comment updated from "Wraps Uniswap V3 positions" to "Wraps JuiceSwap V3 positions"
+//   5. Lines 15-29: Import paths changed from relative paths to @uniswap/v3-periphery package imports
 // All other code unchanged from Uniswap v1.3.0
 
 import '@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol';
