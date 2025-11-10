@@ -18,7 +18,7 @@ program
     '-o, --owner-address <address>',
     'Contract address that will own the deployed artifacts after the script runs'
   )
-  .option('-s, --state <path>', 'Path to the JSON file containing the migrations state (optional)', './state.json')
+  .option('-s, --state <path>', 'Path to the JSON file containing the migrations state (optional, defaults to state.{chainId}.json)')
   .option('-v2, --v2-core-factory-address <address>', 'The V2 core factory address used in the swap router (optional)')
   .option('-g, --gas-price <number>', 'The gas price to pay in GWEI for each transaction (optional)')
   .option('-c, --confirmations <number>', 'How many confirmations to wait for after each transaction (optional)', '2')
@@ -92,25 +92,34 @@ try {
 
 const wallet = new Wallet(program.privateKey, new JsonRpcProvider({ url: url.href }))
 
-let state: MigrationState
-if (fs.existsSync(program.state)) {
-  try {
-    state = JSON.parse(fs.readFileSync(program.state, { encoding: 'utf8' }))
-  } catch (error) {
-    console.error('Failed to load and parse migration state file', (error as Error).message)
-    process.exit(1)
-  }
-} else {
-  state = {}
-}
-
-let finalState: MigrationState
-const onStateChange = async (newState: MigrationState): Promise<void> => {
-  fs.writeFileSync(program.state, JSON.stringify(newState))
-  finalState = newState
-}
-
 async function run() {
+  // Get chain ID to determine state file path
+  const network = await wallet.provider.getNetwork()
+  const chainId = network.chainId
+
+  // Use custom state path if provided, otherwise use chain-specific default
+  const stateFilePath = program.state || `./state.${chainId}.json`
+
+  console.log(`Using state file: ${stateFilePath}`)
+
+  let state: MigrationState
+  if (fs.existsSync(stateFilePath)) {
+    try {
+      state = JSON.parse(fs.readFileSync(stateFilePath, { encoding: 'utf8' }))
+    } catch (error) {
+      console.error('Failed to load and parse migration state file', (error as Error).message)
+      process.exit(1)
+    }
+  } else {
+    state = {}
+  }
+
+  let finalState: MigrationState
+  const onStateChange = async (newState: MigrationState): Promise<void> => {
+    fs.writeFileSync(stateFilePath, JSON.stringify(newState))
+    finalState = newState
+  }
+
   let step = 1
   const results = []
   const generator = deploy({
@@ -142,11 +151,11 @@ async function run() {
     )
   }
 
-  return results
+  return { results, finalState }
 }
 
 run()
-  .then((results) => {
+  .then(({ results, finalState }) => {
     console.log('Deployment succeeded')
     console.log(JSON.stringify(results))
     console.log('Final state')
@@ -155,7 +164,5 @@ run()
   })
   .catch((error) => {
     console.error('Deployment failed', error)
-    console.log('Final state')
-    console.log(JSON.stringify(finalState))
     process.exit(1)
   })

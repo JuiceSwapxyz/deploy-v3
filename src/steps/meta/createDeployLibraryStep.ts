@@ -8,11 +8,11 @@ export default function createDeployLibraryStep({
   key: keyof MigrationState
   artifact: { contractName: string; abi: ContractInterface; bytecode: string }
 }): MigrationStep {
-  return async (state, { signer, gasPrice }) => {
+  return async (state, { signer, maxFeePerGas, maxPriorityFeePerGas }) => {
     if (state[key] === undefined) {
       const factory = new ContractFactory(abi, bytecode, signer)
 
-      const library = await factory.deploy({ gasPrice })
+      const library = await factory.deploy({ maxFeePerGas, maxPriorityFeePerGas })
       state[key] = library.address
 
       return [
