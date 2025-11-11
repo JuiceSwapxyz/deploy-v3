@@ -46,7 +46,7 @@ All contracts include attribution headers with source URLs and commit hash `80f2
 All core DEX logic imported from official @uniswap packages:
 - UniswapV3Factory, UniswapV3Pool (from @uniswap/v3-core@1.0.0)
 - SwapRouter02, QuoterV2 (from @uniswap/swap-router-contracts@1.1.0)
-- All base contracts, interfaces, libraries (from @uniswap/v3-periphery@1.1.1)
+- All base contracts, interfaces, libraries (from @uniswap/v3-periphery@1.3.0)
 
 For detailed implementation and maintenance instructions, see [JUICESWAP_BRANDING.md](./JUICESWAP_BRANDING.md).
 

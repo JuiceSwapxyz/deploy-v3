@@ -44,9 +44,9 @@ All other contracts are imported from official @uniswap packages:
 - ✅ UniswapV3Pool (from @uniswap/v3-core@1.0.0)
 - ✅ SwapRouter02 (from @uniswap/swap-router-contracts@1.1.0)
 - ✅ QuoterV2 (from @uniswap/swap-router-contracts@1.1.0)
-- ✅ All base contracts (from @uniswap/v3-periphery@1.1.1)
-- ✅ All interfaces (from @uniswap/v3-periphery@1.1.1)
-- ✅ All other libraries (from @uniswap/v3-periphery@1.1.1)
+- ✅ All base contracts (from @uniswap/v3-periphery@1.3.0)
+- ✅ All interfaces (from @uniswap/v3-periphery@1.3.0)
+- ✅ All other libraries (from @uniswap/v3-periphery@1.3.0)
 
 ## Deployment
 
