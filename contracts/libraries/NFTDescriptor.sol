@@ -4,7 +4,6 @@ pragma abicoder v2;
 
 // Modified from Uniswap V3 Periphery v1.3.0
 // Source: https://github.com/Uniswap/v3-periphery/blob/v1.3.0/contracts/libraries/NFTDescriptor.sol
-// Commit: 80f26c86c57b8a5e4b913f42844d4c8bd274d058
 // Changes:
 //   1. Line 123: NFT description text changed from "Uniswap V3" to "JuiceSwap V3"
 //   2. Line 171: NFT name prefix changed from "Uniswap -" to "JuiceSwap -"
@@ -18,8 +17,8 @@ import '@openzeppelin/contracts/utils/Strings.sol';
 import '@openzeppelin/contracts/math/SafeMath.sol';
 import '@openzeppelin/contracts/math/SignedSafeMath.sol';
 import 'base64-sol/base64.sol';
-import './HexStrings.sol';
-import './NFTSVG.sol';
+import '@uniswap/v3-periphery/contracts/libraries/HexStrings.sol';
+import '@uniswap/v3-periphery/contracts/libraries/NFTSVG.sol';
 
 library NFTDescriptor {
     using TickMath for int24;
