@@ -1,4 +1,4 @@
-import UniswapV3Factory from '@uniswap/v3-core/artifacts/contracts/UniswapV3Factory.sol/UniswapV3Factory.json'
+import UniswapV3Factory from '@juiceswapxyz/v3-core/artifacts/contracts/UniswapV3Factory.sol/UniswapV3Factory.json'
 import { Contract } from '@ethersproject/contracts'
 import { MigrationStep } from '../migrations'
 

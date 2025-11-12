@@ -1,9 +1,9 @@
 import { ContractFactory } from '@ethersproject/contracts'
 import { Signer } from '@ethersproject/abstract-signer'
-import JuiceSwapNonfungiblePositionManager from '../../artifacts/contracts/JuiceSwapNonfungiblePositionManager.sol/JuiceSwapNonfungiblePositionManager.json'
+import NonfungiblePositionManager from '@juiceswapxyz/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
 import { MigrationStep } from '../migrations'
 
-// Deploy JuiceSwap-branded NonfungiblePositionManager
+// Deploy JuiceSwap-branded NonfungiblePositionManager from v3-periphery fork
 // Modified from Uniswap V3 Periphery v1.3.0 with branding changes:
 // - NFT name: "Uniswap V3 Positions NFT-V1" -> "JuiceSwap V3 Positions NFT-V1"
 // - NFT symbol: "UNI-V3-POS" -> "JUICE-V3-POS"
@@ -19,8 +19,8 @@ export const DEPLOY_NONFUNGIBLE_POSITION_MANAGER_JUICESWAP: MigrationStep = asyn
 
     // Deploy JuiceSwap-branded NonfungiblePositionManager
     const factory = new ContractFactory(
-      JuiceSwapNonfungiblePositionManager.abi,
-      JuiceSwapNonfungiblePositionManager.bytecode,
+      NonfungiblePositionManager.abi,
+      NonfungiblePositionManager.bytecode,
       signer
     )
 

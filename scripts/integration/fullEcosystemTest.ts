@@ -29,9 +29,41 @@ import { JuiceDollarABI } from '@juicedollar/jusd/exports/abis/core/JuiceDollar'
 import { EquityABI } from '@juicedollar/jusd/exports/abis/core/Equity';
 import { StartUSDABI } from '@juicedollar/jusd/exports/abis/utils/StartUSD';
 import { StablecoinBridgeABI } from '@juicedollar/jusd/exports/abis/utils/StablecoinBridge';
-import IUniswapV3FactoryArtifact from '@uniswap/v3-core/artifacts/contracts/UniswapV3Factory.sol/UniswapV3Factory.json';
-import SwapRouterArtifact from '@uniswap/swap-router-contracts/artifacts/contracts/SwapRouter02.sol/SwapRouter02.json';
-import NonfungiblePositionManagerArtifact from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json';
+
+// Multi-repo setup: Use human-readable ABIs for Uniswap contracts
+// This avoids needing to import compiled artifacts from sibling repos
+// which may not have been compiled yet
+
+const IUniswapV3FactoryArtifact = {
+  abi: [
+    'function owner() external view returns (address)',
+    'function feeAmountTickSpacing(uint24) external view returns (int24)',
+    'function getPool(address tokenA, address tokenB, uint24 fee) external view returns (address pool)',
+    'function createPool(address tokenA, address tokenB, uint24 fee) external returns (address pool)',
+    'function setOwner(address _owner) external',
+    'function enableFeeAmount(uint24 fee, int24 tickSpacing) external',
+    'event PoolCreated(address indexed token0, address indexed token1, uint24 indexed fee, int24 tickSpacing, address pool)',
+  ]
+};
+
+const NonfungiblePositionManagerArtifact = {
+  abi: [
+    'function mint((address token0, address token1, uint24 fee, int24 tickLower, int24 tickUpper, uint256 amount0Desired, uint256 amount1Desired, uint256 amount0Min, uint256 amount1Min, address recipient, uint256 deadline)) external payable returns (uint256 tokenId, uint128 liquidity, uint256 amount0, uint256 amount1)',
+    'function positions(uint256 tokenId) external view returns (uint96 nonce, address operator, address token0, address token1, uint24 fee, int24 tickLower, int24 tickUpper, uint128 liquidity, uint256 feeGrowthInside0LastX128, uint256 feeGrowthInside1LastX128, uint128 tokensOwed0, uint128 tokensOwed1)',
+    'function increaseLiquidity((uint256 tokenId, uint256 amount0Desired, uint256 amount1Desired, uint256 amount0Min, uint256 amount1Min, uint256 deadline)) external payable returns (uint128 liquidity, uint256 amount0, uint256 amount1)',
+    'function decreaseLiquidity((uint256 tokenId, uint128 liquidity, uint256 amount0Min, uint256 amount1Min, uint256 deadline)) external payable returns (uint256 amount0, uint256 amount1)',
+    'function collect((uint256 tokenId, address recipient, uint128 amount0Max, uint128 amount1Max)) external payable returns (uint256 amount0, uint256 amount1)',
+    'function burn(uint256 tokenId) external payable',
+    'function createAndInitializePoolIfNecessary(address token0, address token1, uint24 fee, uint160 sqrtPriceX96) external payable returns (address pool)',
+  ]
+};
+
+const SwapRouterArtifact = {
+  abi: [
+    'function exactInputSingle((address tokenIn, address tokenOut, uint24 fee, address recipient, uint256 amountIn, uint256 amountOutMinimum, uint160 sqrtPriceLimitX96)) external payable returns (uint256 amountOut)',
+    'function multicall(uint256 deadline, bytes[] calldata data) external payable returns (bytes[] memory)',
+  ]
+};
 
 const execAsync = promisify(exec);
 
@@ -144,10 +176,27 @@ async function validateDeployedContract(address: string, name: string): Promise<
 }
 
 // ============================================================================
+// Step 0: Deploy WETH9Mock for Testing
+// ============================================================================
+
+async function deployWETH9Mock(): Promise<string> {
+  logSection('🔧 STEP 0: Deploying WETH9Mock for Testing');
+
+  logInfo('Deploying WETH9Mock contract...');
+  const WETH9Factory = await ethers.getContractFactory('WETH9Mock');
+  const weth9Mock = await WETH9Factory.deploy();
+  await weth9Mock.deployed();
+  const weth9Address = weth9Mock.address;
+  logSuccess(`WETH9Mock deployed at: ${weth9Address}`);
+
+  return weth9Address;
+}
+
+// ============================================================================
 // Step 1: Deploy JUSD Protocol (REAL deployProtocol.ts)
 // ============================================================================
 
-async function deployJusdProtocol(): Promise<{
+async function deployJusdProtocol(wcbtcAddress: string): Promise<{
   jusdAddress: string;
   juiceAddress: string;
   startUsdAddress: string;
@@ -162,7 +211,8 @@ async function deployJusdProtocol(): Promise<{
     DEPLOYER_PRIVATE_KEY: HARDHAT_TEST_PRIVATE_KEY,
     DEPLOYER_ACCOUNT_SEED: 'test test test test test test test test test test test junk',
     USE_FORK: 'false',
-    CONFIRM_DEPLOYMENT: 'false'
+    CONFIRM_DEPLOYMENT: 'false',
+    WCBTC_ADDRESS: wcbtcAddress  // Pass WETH9Mock address as WCBTC for testing
   };
 
   try {
@@ -229,7 +279,7 @@ async function deployJusdProtocol(): Promise<{
 // Step 2: Deploy JuiceSwap DEX (Production Script)
 // ============================================================================
 
-async function deployJuiceSwapDex(): Promise<{
+async function deployJuiceSwapDex(weth9Address: string): Promise<{
   factoryAddress: string;
   swapRouterAddress: string;
   proxyAdminAddress: string;
@@ -241,12 +291,7 @@ async function deployJuiceSwapDex(): Promise<{
   const [signer] = await ethers.getSigners();
   const signerAddress = await signer.getAddress();
 
-  logInfo('Deploying WETH9Mock for testing...');
-  const WETH9Factory = await ethers.getContractFactory('WETH9Mock');
-  const weth9Mock = await WETH9Factory.deploy();
-  await weth9Mock.deployed();
-  const weth9Address = weth9Mock.address;
-  logSuccess(`WETH9Mock deployed at: ${weth9Address}`);
+  logInfo(`Using WETH9Mock at: ${weth9Address}`);
 
   logInfo('Running JuiceSwap DEX deployment via scripts/deploy.ts...');
   logInfo('This will deploy: Factory, SwapRouter, PositionManager, Quoter, and all periphery contracts');
@@ -494,7 +539,8 @@ async function runIntegrationTests(addresses: {
       [token0, token1, fee]
     )
   );
-  const POOL_INIT_CODE_HASH = '0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54';
+  // JuiceSwap's custom POOL_INIT_CODE_HASH (modified Pool with 50% max protocol fee)
+  const POOL_INIT_CODE_HASH = '0x851d77a45b8b9a205fb9f44cb829cceba85282714d2603d601840640628a3da7';
   const poolAddress = ethers.utils.getCreate2Address(addresses.factoryAddress, salt, POOL_INIT_CODE_HASH);
 
   logInfo(`Computed pool address: ${poolAddress}`);
@@ -504,9 +550,13 @@ async function runIntegrationTests(addresses: {
   if (poolCode === '0x') {
     logInfo('Pool does not exist, creating...');
 
+    // sqrtPriceX96 = sqrt(token1/token0) * 2^96
+    // We want 1 WcBTC = 40000 JUSD
+    // If WcBTC is token0 and JUSD is token1: token1/token0 = 40000 JUSD / 1 WcBTC = 40000, sqrt = 200
+    // If JUSD is token0 and WcBTC is token1: token1/token0 = 1 WcBTC / 40000 JUSD = 1/40000, sqrt = 1/200
     const sqrtPriceX96 = token0.toLowerCase() === wcbtcAddr.toLowerCase()
-      ? encodeSqrtRatioX96(BigInt(1), BigInt(40000))
-      : encodeSqrtRatioX96(BigInt(40000), BigInt(1));
+      ? encodeSqrtRatioX96(BigInt(200), BigInt(1))  // WcBTC is token0: sqrt(40000) = 200
+      : encodeSqrtRatioX96(BigInt(1), BigInt(200));  // JUSD is token0: sqrt(1/40000) = 1/200
 
     const tx = await positionManager.createAndInitializePoolIfNecessary(
       token0,
@@ -593,7 +643,7 @@ async function runIntegrationTests(addresses: {
 
   logInfo('Test 5: Executing test swaps to generate fees...');
 
-  const jusdSwapAmount = ethers.utils.parseEther('500');
+  const jusdSwapAmount = ethers.utils.parseEther('100');
   tx = await jusd.approve(addresses.swapRouterAddress, jusdSwapAmount);
   await tx.wait();
 
@@ -602,7 +652,6 @@ async function runIntegrationTests(addresses: {
     tokenOut: wcbtcAddr,
     fee,
     recipient: deployer.address,
-    deadline: await getDeadline(3600),
     amountIn: jusdSwapAmount,
     amountOutMinimum: 0,
     sqrtPriceLimitX96: 0,
@@ -611,7 +660,7 @@ async function runIntegrationTests(addresses: {
   tx = await router.exactInputSingle(swapParams);
   await tx.wait();
 
-  logSuccess('✓ Swap 1 completed: 500 JUSD → WcBTC');
+  logSuccess('✓ Swap 1 completed: 100 JUSD → WcBTC');
 
   const wcbtcSwapAmount = ethers.utils.parseEther('0.0125');
   tx = await weth9.approve(addresses.swapRouterAddress, wcbtcSwapAmount);
@@ -622,7 +671,6 @@ async function runIntegrationTests(addresses: {
     tokenOut: jusdAddr,
     fee,
     recipient: deployer.address,
-    deadline: await getDeadline(3600),
     amountIn: wcbtcSwapAmount,
     amountOutMinimum: 0,
     sqrtPriceLimitX96: 0,
@@ -945,16 +993,19 @@ async function main() {
   validatePaths();
 
   try {
+    // Deploy WETH9Mock first - needed by both JUSD Protocol and DEX
+    const weth9Address = await deployWETH9Mock();
+
     const { jusdAddress, juiceAddress, startUsdAddress, bridgeStartUsdAddress } =
-      await deployJusdProtocol();
+      await deployJusdProtocol(weth9Address);
 
     const {
       factoryAddress,
       swapRouterAddress,
       proxyAdminAddress,
       positionManagerAddress,
-      weth9Address,
-    } = await deployJuiceSwapDex();
+      weth9Address: dexWeth9Address,
+    } = await deployJuiceSwapDex(weth9Address);
 
     const { governorAddress, feeCollectorAddress } = await deployGovernance(
       jusdAddress,

@@ -1,4 +1,4 @@
-import QuoterV2 from '@uniswap/swap-router-contracts/artifacts/contracts/lens/QuoterV2.sol/QuoterV2.json'
+import QuoterV2 from '@juiceswapxyz/swap-router-contracts/artifacts/contracts/lens/QuoterV2.sol/QuoterV2.json'
 import createDeployContractStep from './meta/createDeployContractStep'
 
 export const DEPLOY_QUOTER_V2 = createDeployContractStep({
