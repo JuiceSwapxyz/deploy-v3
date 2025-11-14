@@ -59,6 +59,8 @@
     "@juiceswapxyz/swap-router-contracts": "^1.0.0",
     "@juiceswapxyz/v3-core": "^1.0.0",
     "@juiceswapxyz/v3-periphery": "^1.0.0",
+    "@juicedollar/jusd": "git+https://github.com/JuiceDollar/smartContracts.git#develop",
+    "@juiceswap/smart-contracts": "git+https://github.com/JuiceSwapxyz/smart-contracts.git#develop",
     "@uniswap/lib": "^4.0.1-alpha",
     "@uniswap/v2-core": "^1.0.1",
     "base64-sol": "1.0.1",
@@ -76,7 +78,6 @@
     "typescript": "^4.0.2"
   },
   "dependencies": {
-    "@juicedollar/jusd": "git+https://github.com/JuiceDollar/smartContracts.git#develop",
     "axios": "^1.12.2",
     "ethers": "5",
     "solc": "^0.7.6"

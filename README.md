@@ -200,29 +200,14 @@ npm run test:ecosystem
 
 Results saved to `/tmp/ecosystem-test.log`.
 
-**Folder Structure:**
+**Dependencies:**
 
-The integration test uses production deployment scripts from external repositories. Default folder structure:
+The integration test uses production deployment scripts from npm packages:
+- **@juicedollar/jusd**: JUSD Protocol (develop branch)
+- **@juiceswap/smart-contracts**: Governance (develop branch)
+- **@juiceswapxyz/v3-core, v3-periphery, swap-router-contracts**: DEX (published versions)
 
-```
-JuiceSwapXyz/
-├── JuiceDollar/
-│   └── smartContracts/          # JUSD deployment scripts
-├── deploy-v3/                    # This repo (JuiceSwap DEX)
-└── smart-contracts/              # Governance deployment scripts
-```
-
-**Path Overrides:**
-
-If your folder structure differs, override paths in `.env`:
-
-```bash
-# Optional: Override integration test repo paths
-JUSD_REPO_PATH=/path/to/JuiceDollar/smartContracts
-GOVERNANCE_REPO_PATH=/path/to/JuiceSwap/smart-contracts
-```
-
-See `.env.example` for complete configuration options.
+All dependencies are automatically installed via `yarn install`.
 
 ## Security Audit
 

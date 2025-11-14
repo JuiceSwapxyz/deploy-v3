@@ -2,18 +2,17 @@
  * Full JUICE Ecosystem Integration Test
  *
  * Tests the complete JUICE ecosystem by deploying using REAL production scripts:
- * 1. JUSD Protocol - Uses JuiceDollar/smartContracts deployment
- * 2. JuiceSwap DEX - Uses internal deploy-v3 deployment
- * 3. Governance - Uses JuiceSwapXyz/smart-contracts deployment
+ * 1. JUSD Protocol - Uses @juicedollar/jusd npm package (develop branch)
+ * 2. JuiceSwap DEX - Uses internal deploy-v3 deployment (published npm packages)
+ * 3. Governance - Uses @juiceswap/smart-contracts npm package (develop branch)
  *
  * This ensures not only that contracts work together, but that deployment scripts
  * themselves are correct and production-ready.
  *
- * Folder Structure (configurable via .env):
- *   parent/
- *   ├── JuiceDollar/smartContracts/     (JUSD_REPO_PATH)
- *   ├── JuiceSwapXyz/smart-contracts/   (GOVERNANCE_REPO_PATH)
- *   └── JuiceSwapXyz/deploy-v3/         (this repo)
+ * Dependencies are automatically installed via 'yarn install' from:
+ *   - @juicedollar/jusd: git+https://github.com/JuiceDollar/smartContracts.git#develop
+ *   - @juiceswap/smart-contracts: git+https://github.com/JuiceSwapxyz/smart-contracts.git#develop
+ *   - @juiceswapxyz/v3-core, v3-periphery, swap-router-contracts: Published npm packages
  *
  * Usage:
  *   npm run test:ecosystem
@@ -78,33 +77,29 @@ async function getDeadline(secondsFromNow: number = 600): Promise<number> {
 }
 
 // ============================================================================
-// Configuration - Flexible Repo Paths
+// Configuration - NPM Package Paths
 // ============================================================================
 
 const PATHS = {
-  JUSD_REPO: process.env.JUSD_REPO_PATH ||
-    path.resolve(__dirname, '../../../../JuiceDollar/smartContracts'),
-  GOVERNANCE_REPO: process.env.GOVERNANCE_REPO_PATH ||
-    path.resolve(__dirname, '../../../smart-contracts'),
+  JUSD_REPO: path.resolve(__dirname, '../../node_modules/@juicedollar/jusd'),
+  GOVERNANCE_REPO: path.resolve(__dirname, '../../node_modules/@juiceswap/smart-contracts'),
   DEX_REPO: path.resolve(__dirname, '../..'),
 };
 
 function validatePaths() {
   if (!fs.existsSync(PATHS.JUSD_REPO)) {
     throw new Error(
-      `\n❌ JUSD repo not found at: ${PATHS.JUSD_REPO}\n` +
-      `   Set JUSD_REPO_PATH in .env or clone JuiceDollar/smartContracts.\n` +
-      `   See README.md for folder structure.\n`
+      `\n❌ JUSD package not found at: ${PATHS.JUSD_REPO}\n` +
+      `   Run 'yarn install' to download dependencies.\n`
     );
   }
   if (!fs.existsSync(PATHS.GOVERNANCE_REPO)) {
     throw new Error(
-      `\n❌ Governance repo not found at: ${PATHS.GOVERNANCE_REPO}\n` +
-      `   Set GOVERNANCE_REPO_PATH in .env or clone JuiceSwapXyz/smart-contracts.\n` +
-      `   See README.md for folder structure.\n`
+      `\n❌ Governance package not found at: ${PATHS.GOVERNANCE_REPO}\n` +
+      `   Run 'yarn install' to download dependencies.\n`
     );
   }
-  console.log('✅ Repository paths validated:');
+  console.log('✅ Package paths validated:');
   console.log(`   JUSD: ${PATHS.JUSD_REPO}`);
   console.log(`   Governance: ${PATHS.GOVERNANCE_REPO}`);
   console.log(`   DEX: ${PATHS.DEX_REPO}`);
@@ -175,6 +170,23 @@ async function validateDeployedContract(address: string, name: string): Promise<
   }
 }
 
+async function installPackageDependencies(
+  packagePath: string,
+  packageName: string,
+  env: Record<string, any>
+): Promise<void> {
+  logInfo(`Installing ${packageName} dependencies...`);
+  await execAsync(
+    'yarn install',
+    {
+      cwd: packagePath,
+      maxBuffer: 10 * 1024 * 1024,
+      timeout: DEPLOYMENT_TIMEOUT,
+      env
+    }
+  );
+}
+
 // ============================================================================
 // Step 0: Deploy WETH9Mock for Testing
 // ============================================================================
@@ -216,6 +228,9 @@ async function deployJusdProtocol(wcbtcAddress: string): Promise<{
   };
 
   try {
+    // Install dependencies for JUSD Protocol
+    await installPackageDependencies(PATHS.JUSD_REPO, 'JUSD Protocol', jusdEnv);
+
     // Compile JUSD Protocol contracts
     await execAsync(
       'npx hardhat compile',
@@ -393,6 +408,9 @@ async function deployGovernance(
   };
 
   try {
+    // Install dependencies for smart-contracts
+    await installPackageDependencies(PATHS.GOVERNANCE_REPO, 'Governance', govEnv);
+
     const { stderr } = await execAsync(
       'npm run deploy:gov -- --network localhost',
       {
