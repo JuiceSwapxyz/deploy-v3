@@ -1,4 +1,4 @@
-import V3Migrator from '@uniswap/v3-periphery/artifacts/contracts/V3Migrator.sol/V3Migrator.json'
+import V3Migrator from '@juiceswapxyz/v3-periphery/artifacts/contracts/V3Migrator.sol/V3Migrator.json'
 import createDeployContractStep from './meta/createDeployContractStep'
 
 export const DEPLOY_V3_MIGRATOR = createDeployContractStep({

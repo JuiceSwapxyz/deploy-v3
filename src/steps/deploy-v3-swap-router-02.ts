@@ -1,4 +1,4 @@
-import SwapRouter02 from '@uniswap/swap-router-contracts/artifacts/contracts/SwapRouter02.sol/SwapRouter02.json'
+import SwapRouter02 from '@juiceswapxyz/swap-router-contracts/artifacts/contracts/SwapRouter02.sol/SwapRouter02.json'
 import createDeployContractStep from './meta/createDeployContractStep'
 
 export const DEPLOY_V3_SWAP_ROUTER_02 = createDeployContractStep({
