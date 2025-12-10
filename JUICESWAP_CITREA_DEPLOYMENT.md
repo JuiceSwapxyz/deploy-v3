@@ -30,7 +30,7 @@
 
 ## 🔧 Configuration
 
-- **WETH9 Address:** `0x4370e27F7d91D9341bFf232d7Ee8bdfE3a9933a0`
+- **WCBTC Address:** `0x8d0c9d1c17aE5e40ffF9bE350f57840E9E66Cd93`
 - **Native Currency:** cBTC
 - **Owner:** `0xc89E49490020fc4e8eE681553A2354234Fc3F1D4`
 
@@ -69,9 +69,9 @@ const factory = new ethers.Contract(
   signer
 );
 
-// Create WETH/USDC pool with 0.3% fee
+// Create WCBTC/TOKEN pool with 0.3% fee
 await factory.createPool(
-  "0x4370e27F7d91D9341bFf232d7Ee8bdfE3a9933a0", // WETH9
+  "0x8d0c9d1c17aE5e40ffF9bE350f57840E9E66Cd93", // WCBTC
   "YOUR_TOKEN_ADDRESS",
   3000 // 0.3% fee
 );
