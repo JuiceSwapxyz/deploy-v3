@@ -3,6 +3,10 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { parseUnits } from '@ethersproject/units'
 import { migrate } from './migrate'
 import { MigrationState, MigrationStep, StepOutput } from './migrations'
+// V2 Steps
+import { DEPLOY_V2_FACTORY } from './steps/deploy-v2-factory'
+import { DEPLOY_V2_ROUTER_02 } from './steps/deploy-v2-router-02'
+// V3 Steps
 import { ADD_1BP_FEE_TIER } from './steps/add-1bp-fee-tier'
 import { DEPLOY_MULTICALL2 } from './steps/deploy-multicall2'
 import { DEPLOY_JUICESWAP_NFT_DESCRIPTOR_LIBRARY } from './steps/deploy-juiceswap-nft-descriptor-library'
@@ -20,7 +24,10 @@ import { TRANSFER_PROXY_ADMIN } from './steps/transfer-proxy-admin'
 import { TRANSFER_V3_CORE_FACTORY_OWNER } from './steps/transfer-v3-core-factory-owner'
 
 const MIGRATION_STEPS: MigrationStep[] = [
-  // must come first, for address calculations
+  // V2 First - SwapRouter02 depends on V2 factory address
+  DEPLOY_V2_FACTORY,
+  DEPLOY_V2_ROUTER_02,
+  // V3 - must come after V2 for SwapRouter02 to have V2 factory address
   DEPLOY_V3_CORE_FACTORY,
   ADD_1BP_FEE_TIER,
   DEPLOY_MULTICALL2,
