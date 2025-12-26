@@ -5,9 +5,9 @@
     "chainId": 5115
   },
   "deployment": {
-    "deployedAt": "2025-12-10T18:09:07.285Z",
+    "deployedAt": "2025-12-26T13:41:21.374Z",
     "deployedBy": "0xE399782Fe2B0aBb138926b14261F49473b4881A3",
-    "blockNumber": 19289966
+    "blockNumber": 19973430
   },
   "contracts": {
     "v2FactoryAddress": "0x81b159FE82d8ECC8ff4801BB687166972dF3f144",
@@ -22,7 +22,8 @@
     "nonfungibleTokenPositionManagerAddress": "0x56D63E0F763b29F62bb7242420d028F86e9402E1",
     "v3MigratorAddress": "0x2936DF6c0fa9A6C88744f035B3801044780F49c5",
     "v3StakerAddress": "0x477903E3449b1C6BEaB1fDA6b5a433eb7E64cD8b",
-    "quoterV2Address": "0x14985Bc2967Dd38B1e71540d926F2c8f0dA0a1B5"
+    "quoterV2Address": "0x14985Bc2967Dd38B1e71540d926F2c8f0dA0a1B5",
+    "swapRouter02": "0xe43C5C13610845128212De09E0780F0F180C4daa"
   },
   "metadata": {
     "deployer": "JuiceSwapXyz/deploy-v3",
