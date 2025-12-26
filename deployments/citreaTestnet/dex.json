@@ -22,8 +22,7 @@
     "nonfungibleTokenPositionManagerAddress": "0x56D63E0F763b29F62bb7242420d028F86e9402E1",
     "v3MigratorAddress": "0x2936DF6c0fa9A6C88744f035B3801044780F49c5",
     "v3StakerAddress": "0x477903E3449b1C6BEaB1fDA6b5a433eb7E64cD8b",
-    "quoterV2Address": "0x14985Bc2967Dd38B1e71540d926F2c8f0dA0a1B5",
-    "swapRouter02": "0x0214b0222ffB57C6a04310B4F42Cf7979D67f2C8"
+    "quoterV2Address": "0x14985Bc2967Dd38B1e71540d926F2c8f0dA0a1B5"
   },
   "metadata": {
     "deployer": "JuiceSwapXyz/deploy-v3",

@@ -93,6 +93,13 @@ const config: HardhatUserConfig = {
         url: process.env.RPC_URL || 'https://rpc.testnet.citrea.xyz',
         enabled: true,
       } : undefined,
+      chains: {
+        5115: {
+          hardforkHistory: {
+            shanghai: 0,  // Citrea uses Shanghai EVM from genesis
+          },
+        },
+      },
     },
     localhost: {
       url: "http://127.0.0.1:8545",

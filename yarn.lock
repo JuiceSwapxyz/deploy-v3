@@ -431,10 +431,10 @@
   dependencies:
     "@openzeppelin/contracts" "^5.1.0"
 
-"@juiceswapxyz/swap-router-contracts@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@juiceswapxyz/swap-router-contracts/-/swap-router-contracts-1.0.0.tgz#a341548409c8dfc886499d2a97767b3c8bd86155"
-  integrity sha512-Ij8Q5SqG0jxKcEkFa7BcthSpLxKGx2YbZjWGzOSA3g+HFH5ILd2e+nvaFhNOiDLIgvfm6YqDvc5zmLbWf8GCEg==
+"@juiceswapxyz/swap-router-contracts@1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@juiceswapxyz/swap-router-contracts/-/swap-router-contracts-1.0.1.tgz#23b595ebb6d14e86d40b16515ff80bb476cb8a8b"
+  integrity sha512-9pr5pTl0XqtF9aiixHIwdfuucm/wFj0Dm3uBZjzn/MkMSSZYBfmwFk/zUbFwgHoJvB/NnD40BA71aPDnECMtTA==
   dependencies:
     "@juiceswapxyz/v3-core" "^1.0.0"
     "@juiceswapxyz/v3-periphery" "^1.0.1"
