@@ -21,7 +21,10 @@
     "deploy:fork": "FORK_ENABLED=true npx hardhat run scripts/deploy.ts --network hardhat",
     "deploy:testnet": "npx hardhat run scripts/deploy.ts --network citreaTestnet",
     "verify:testnet": "DEPLOYMENT_FILE_PATH=./deployments/citreaTestnet/dex.json npx hardhat run scripts/verifyContracts.ts --network citreaTestnet",
-    "test:ecosystem": "hardhat run scripts/integration/fullEcosystemTest.ts --network localhost"
+    "validate:hashes": "ts-node scripts/validateHashes.ts",
+    "pretest:ecosystem": "npm run validate:hashes",
+    "test:ecosystem": "hardhat run scripts/integration/fullEcosystemTest.ts --network localhost",
+    "test:deployed": "hardhat run scripts/integration/testDeployedDex.ts --network localhost"
   },
   "files": [
     "dist/"
