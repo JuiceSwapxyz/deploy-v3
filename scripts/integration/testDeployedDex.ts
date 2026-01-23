@@ -95,7 +95,7 @@ async function main() {
   // TEST 3: Create V2 Pair Using Deployed Factory
   // ═══════════════════════════════════════════════════════════════
   console.log('\n📋 Test 3: Create V2 pair using deployed factory')
-  let v2Pair: Contract
+  let v2Pair: Contract | undefined
   try {
     const v2Factory = await ethers.getContractAt(
       ['function createPair(address,address) returns (address)', 'function getPair(address,address) view returns (address)', 'function allPairsLength() view returns (uint)'],
@@ -137,89 +137,97 @@ async function main() {
   // TEST 4: Add Liquidity via Deployed V2 Router
   // ═══════════════════════════════════════════════════════════════
   console.log('\n📋 Test 4: Add liquidity via deployed V2 Router')
-  try {
-    const v2Router = await ethers.getContractAt(
-      ['function addLiquidity(address,address,uint256,uint256,uint256,uint256,address,uint256) returns (uint256,uint256,uint256)'],
-      DEPLOYED.v2Router02
-    )
+  if (!v2Pair) {
+    console.log('   ⏭️  SKIP: V2 pair not created (Test 3 failed)')
+  } else {
+    try {
+      const v2Router = await ethers.getContractAt(
+        ['function addLiquidity(address,address,uint256,uint256,uint256,uint256,address,uint256) returns (uint256,uint256,uint256)'],
+        DEPLOYED.v2Router02
+      )
 
-    const amountA = ethers.utils.parseEther('1000')
-    const amountB = ethers.utils.parseEther('2000')
+      const amountA = ethers.utils.parseEther('1000')
+      const amountB = ethers.utils.parseEther('2000')
 
-    // Approve router
-    await (await tokenA.approve(DEPLOYED.v2Router02, amountA)).wait()
-    await (await tokenB.approve(DEPLOYED.v2Router02, amountB)).wait()
+      // Approve router
+      await (await tokenA.approve(DEPLOYED.v2Router02, amountA)).wait()
+      await (await tokenB.approve(DEPLOYED.v2Router02, amountB)).wait()
 
-    const deadline = Math.floor(Date.now() / 1000) + 3600
-    const tx = await v2Router.addLiquidity(
-      tokenA.address,
-      tokenB.address,
-      amountA,
-      amountB,
-      0,
-      0,
-      deployer.address,
-      deadline
-    )
-    await tx.wait()
+      const deadline = Math.floor(Date.now() / 1000) + 3600
+      const tx = await v2Router.addLiquidity(
+        tokenA.address,
+        tokenB.address,
+        amountA,
+        amountB,
+        0,
+        0,
+        deployer.address,
+        deadline
+      )
+      await tx.wait()
 
-    const [reserve0, reserve1] = await v2Pair.getReserves()
-    console.log(`   Reserve0: ${ethers.utils.formatEther(reserve0)}`)
-    console.log(`   Reserve1: ${ethers.utils.formatEther(reserve1)}`)
+      const [reserve0, reserve1] = await v2Pair.getReserves()
+      console.log(`   Reserve0: ${ethers.utils.formatEther(reserve0)}`)
+      console.log(`   Reserve1: ${ethers.utils.formatEther(reserve1)}`)
 
-    if (reserve0.gt(0) && reserve1.gt(0)) {
-      console.log('   ✅ PASS: Liquidity added successfully')
-      passed++
-    } else {
-      console.log('   ❌ FAIL: Reserves are zero')
+      if (reserve0.gt(0) && reserve1.gt(0)) {
+        console.log('   ✅ PASS: Liquidity added successfully')
+        passed++
+      } else {
+        console.log('   ❌ FAIL: Reserves are zero')
+        failed++
+      }
+    } catch (e: any) {
+      console.log(`   ❌ FAIL: ${e.message}`)
       failed++
     }
-  } catch (e: any) {
-    console.log(`   ❌ FAIL: ${e.message}`)
-    failed++
   }
 
   // ═══════════════════════════════════════════════════════════════
   // TEST 5: Execute V2 Swap via Deployed Router
   // ═══════════════════════════════════════════════════════════════
   console.log('\n📋 Test 5: Execute V2 swap via deployed router')
-  try {
-    const v2Router = await ethers.getContractAt(
-      ['function swapExactTokensForTokens(uint256,uint256,address[],address,uint256) returns (uint256[])'],
-      DEPLOYED.v2Router02
-    )
+  if (!v2Pair) {
+    console.log('   ⏭️  SKIP: V2 pair not created (Test 3 failed)')
+  } else {
+    try {
+      const v2Router = await ethers.getContractAt(
+        ['function swapExactTokensForTokens(uint256,uint256,address[],address,uint256) returns (uint256[])'],
+        DEPLOYED.v2Router02
+      )
 
-    const swapAmount = ethers.utils.parseEther('100')
-    await (await tokenA.approve(DEPLOYED.v2Router02, swapAmount)).wait()
+      const swapAmount = ethers.utils.parseEther('100')
+      await (await tokenA.approve(DEPLOYED.v2Router02, swapAmount)).wait()
 
-    const balBefore = await tokenB.balanceOf(deployer.address)
+      const balBefore = await tokenB.balanceOf(deployer.address)
 
-    const deadline = Math.floor(Date.now() / 1000) + 3600
-    const tx = await v2Router.swapExactTokensForTokens(
-      swapAmount,
-      0,
-      [tokenA.address, tokenB.address],
-      deployer.address,
-      deadline
-    )
-    await tx.wait()
+      const deadline = Math.floor(Date.now() / 1000) + 3600
+      const tx = await v2Router.swapExactTokensForTokens(
+        swapAmount,
+        0,
+        [tokenA.address, tokenB.address],
+        deployer.address,
+        deadline
+      )
+      await tx.wait()
 
-    const balAfter = await tokenB.balanceOf(deployer.address)
-    const received = balAfter.sub(balBefore)
+      const balAfter = await tokenB.balanceOf(deployer.address)
+      const received = balAfter.sub(balBefore)
 
-    console.log(`   Swapped: ${ethers.utils.formatEther(swapAmount)} cUSD`)
-    console.log(`   Received: ${ethers.utils.formatEther(received)} cUSD`)
+      console.log(`   Swapped: ${ethers.utils.formatEther(swapAmount)} cUSD`)
+      console.log(`   Received: ${ethers.utils.formatEther(received)} cUSD`)
 
-    if (received.gt(0)) {
-      console.log('   ✅ PASS: V2 swap successful')
-      passed++
-    } else {
-      console.log('   ❌ FAIL: No tokens received')
+      if (received.gt(0)) {
+        console.log('   ✅ PASS: V2 swap successful')
+        passed++
+      } else {
+        console.log('   ❌ FAIL: No tokens received')
+        failed++
+      }
+    } catch (e: any) {
+      console.log(`   ❌ FAIL: ${e.message}`)
       failed++
     }
-  } catch (e: any) {
-    console.log(`   ❌ FAIL: ${e.message}`)
-    failed++
   }
 
   // ═══════════════════════════════════════════════════════════════

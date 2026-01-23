@@ -99,13 +99,13 @@ export function encodeSqrtRatioX96(amount1: bigint, amount0: bigint): bigint {
  * Babylonian square root for bigint
  */
 function sqrt(value: bigint): bigint {
-  if (value < 0n) throw new Error('sqrt of negative');
-  if (value === 0n) return 0n;
+  if (value < BigInt(0)) throw new Error('sqrt of negative');
+  if (value === BigInt(0)) return BigInt(0);
   let z = value;
-  let x = value / 2n + 1n;
+  let x = value / BigInt(2) + BigInt(1);
   while (x < z) {
     z = x;
-    x = (value / x + x) / 2n;
+    x = (value / x + x) / BigInt(2);
   }
   return z;
 }
