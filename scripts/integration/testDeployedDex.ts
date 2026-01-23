@@ -1,22 +1,29 @@
 /**
- * Test deployed DEX contracts on a fork of Citrea testnet
- * This script tests V2 and V3 functionality using the actual deployed contracts
+ * Test deployed DEX contracts on a network fork
+ * This script tests V2 and V3 functionality using actual deployed contracts
+ *
+ * Usage:
+ *   # Test citreaTestnet deployment on a fork (forks citreaTestnet, loads citreaTestnet addresses)
+ *   FORK_ENABLED=true npx hardhat run scripts/integration/testDeployedDex.ts --network hardhat
  */
 import { ethers } from 'hardhat'
 import { Contract, BigNumber } from 'ethers'
 import { loadDeployment, deploymentExists } from '../../src/constants/deployments'
 import { FEE_TIERS, SQRT_PRICE_X96_ONE_TO_ONE } from '../../src/constants'
 
+// Determine which deployment to load
+const DEPLOYMENT_NETWORK = process.env.DEPLOYMENT_NETWORK || 'citreaTestnet'
+
 // Load deployed contract addresses from deployment state
 function getDeployedAddresses() {
-  const network = 'citreaTestnet'
-  if (!deploymentExists(network)) {
+  if (!deploymentExists(DEPLOYMENT_NETWORK)) {
     throw new Error(
-      `Deployment file not found for network: ${network}. ` +
-      `Run deployment first or ensure deployments/${network}/dex.json exists.`
+      `Deployment file not found for network: ${DEPLOYMENT_NETWORK}. ` +
+      `Run deployment first or ensure deployments/${DEPLOYMENT_NETWORK}/dex.json exists.\n` +
+      `Hint: Set DEPLOYMENT_NETWORK env var to specify a different deployment.`
     );
   }
-  const deployment = loadDeployment(network)
+  const deployment = loadDeployment(DEPLOYMENT_NETWORK)
   return {
     v2Factory: deployment.v2FactoryAddress,
     v2Router02: deployment.v2Router02Address,
@@ -39,7 +46,7 @@ async function deployTestToken() {
 
 async function main() {
   console.log('\n═══════════════════════════════════════════════════════════════')
-  console.log('  🧪 TESTING DEPLOYED DEX ON CITREA TESTNET FORK')
+  console.log(`  🧪 TESTING DEPLOYED DEX (deployment: ${DEPLOYMENT_NETWORK})`)
   console.log('═══════════════════════════════════════════════════════════════\n')
 
   const [deployer, user1] = await ethers.getSigners()
