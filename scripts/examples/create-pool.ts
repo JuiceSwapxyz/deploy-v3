@@ -2,6 +2,7 @@ import { ethers } from 'ethers'
 import { abi as IUniswapV3FactoryABI } from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Factory.sol/IUniswapV3Factory.json'
 import { abi as INonfungiblePositionManagerABI } from '@uniswap/v3-periphery/artifacts/contracts/interfaces/INonfungiblePositionManager.sol/INonfungiblePositionManager.json'
 import { getCitreaWallet } from './src/util/wallet'
+import { FEE_TIERS, SQRT_PRICE_X96_ONE_TO_ONE, getFullRangeTicks } from '../../src/constants'
 
 // ERC20 ABI for approve
 const ERC20_ABI = [
@@ -23,8 +24,8 @@ async function createPoolAndAddLiquidity() {
   const TFC_ADDRESS = '0x14ADf6B87096Ef750a956756BA191fc6BE94e473'
   
   // Pool configuration
-  const FEE = 3000 // 0.3%
-  const SQRT_PRICE_X96 = ethers.BigNumber.from('79228162514264337593543950336') // 1:1 initial price
+  const FEE = FEE_TIERS.MEDIUM // 0.3%
+  const SQRT_PRICE_X96 = ethers.BigNumber.from(SQRT_PRICE_X96_ONE_TO_ONE.toString()) // 1:1 initial price
   
   // Amounts
   const WCBTC_AMOUNT = ethers.utils.parseEther('0.0001') // 0.0001 WCBTC
@@ -140,12 +141,15 @@ async function createPoolAndAddLiquidity() {
     // Add liquidity
     console.log('💦 Adding liquidity to pool...')
     
+    // Get full range ticks aligned to tick spacing for the fee tier
+    const { tickLower, tickUpper } = getFullRangeTicks(FEE)
+
     const mintParams = {
       token0: token0,
       token1: token1,
       fee: FEE,
-      tickLower: -887220, // Full range
-      tickUpper: 887220,  // Full range
+      tickLower,
+      tickUpper,
       amount0Desired: amount0,
       amount1Desired: amount1,
       amount0Min: 0,

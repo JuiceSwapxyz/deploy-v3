@@ -24,6 +24,13 @@ import { promisify } from 'util';
 import fs from 'fs';
 import path from 'path';
 
+import {
+  FEE_TIERS,
+  computeV3PoolAddress,
+  getFullRangeTicks,
+  encodeSqrtRatioX96,
+} from '../../src/constants';
+
 import { JuiceDollarABI } from '@juicedollar/jusd/exports/abis/core/JuiceDollar';
 import { EquityABI } from '@juicedollar/jusd/exports/abis/core/Equity';
 import { StartUSDABI } from '@juicedollar/jusd/exports/abis/utils/StartUSD';
@@ -172,29 +179,6 @@ function logInfo(message: string) {
 
 function logWarning(message: string) {
   console.log(`⚠️  ${message}`);
-}
-
-function bigIntSqrt(value: bigint): bigint {
-  if (value < BigInt(0)) {
-    throw new Error('Square root of negative numbers is not supported');
-  }
-  if (value < BigInt(2)) {
-    return value;
-  }
-
-  let z = value;
-  let x = value / BigInt(2) + BigInt(1);
-  while (x < z) {
-    z = x;
-    x = (value / x + x) / BigInt(2);
-  }
-  return z;
-}
-
-function encodeSqrtRatioX96(numerator: bigint, denominator: bigint): bigint {
-  const Q96 = BigInt(1) << BigInt(96);
-  const ratioX192 = (numerator * Q96 * Q96) / denominator;
-  return bigIntSqrt(ratioX192);
 }
 
 async function validateDeployedContract(address: string, name: string): Promise<void> {
@@ -605,22 +589,13 @@ async function runIntegrationTests(addresses: {
 
   const wcbtcAddr = addresses.weth9Address;
   const jusdAddr = addresses.jusdAddress;
-  const fee = 3000;
+  const fee = FEE_TIERS.MEDIUM; // 0.30% fee tier
   const [token0, token1] = wcbtcAddr.toLowerCase() < jusdAddr.toLowerCase()
     ? [wcbtcAddr, jusdAddr]
     : [jusdAddr, wcbtcAddr];
 
-  // Compute pool address using Uniswap V3's CREATE2 formula
-  // Salt = keccak256(abi.encode(token0, token1, fee)) - NOT solidityKeccak256!
-  const salt = ethers.utils.keccak256(
-    ethers.utils.defaultAbiCoder.encode(
-      ['address', 'address', 'uint24'],
-      [token0, token1, fee]
-    )
-  );
-  // JuiceSwap's custom POOL_INIT_CODE_HASH (modified Pool with 50% max protocol fee)
-  const POOL_INIT_CODE_HASH = '0x851d77a45b8b9a205fb9f44cb829cceba85282714d2603d601840640628a3da7';
-  const poolAddress = ethers.utils.getCreate2Address(addresses.factoryAddress, salt, POOL_INIT_CODE_HASH);
+  // Compute pool address using CREATE2 formula with init code hash from npm package
+  const poolAddress = computeV3PoolAddress(addresses.factoryAddress, wcbtcAddr, jusdAddr, fee);
 
   logInfo(`Computed pool address: ${poolAddress}`);
 
@@ -701,12 +676,15 @@ async function runIntegrationTests(addresses: {
     ? [wcbtcLiqAmount, jusdLiqAmount]
     : [jusdLiqAmount, wcbtcLiqAmount];
 
+  // Get full range ticks aligned to tick spacing for the fee tier
+  const { tickLower, tickUpper } = getFullRangeTicks(fee);
+
   const mintParams = {
     token0,
     token1,
     fee,
-    tickLower: -887220,
-    tickUpper: 887220,
+    tickLower,
+    tickUpper,
     amount0Desired: amount0,
     amount1Desired: amount1,
     amount0Min: 0,
