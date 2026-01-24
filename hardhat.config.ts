@@ -46,9 +46,35 @@ const LOWEST_OPTIMIZER_COMPILER_SETTINGS = {
   },
 };
 
+// JuiceSwap V2 Core compiler settings (Solidity 0.5.16)
+const V2_CORE_COMPILER_SETTINGS = {
+  version: "0.5.16",
+  settings: {
+    optimizer: {
+      enabled: true,
+      runs: 999999,
+    },
+  },
+};
+
+// JuiceSwap V2 Periphery compiler settings (Solidity 0.6.6)
+const V2_PERIPHERY_COMPILER_SETTINGS = {
+  version: "0.6.6",
+  settings: {
+    optimizer: {
+      enabled: true,
+      runs: 999999,
+    },
+  },
+};
+
 const config: HardhatUserConfig = {
   solidity: {
-    compilers: [DEFAULT_COMPILER_SETTINGS],
+    compilers: [
+      DEFAULT_COMPILER_SETTINGS,
+      V2_CORE_COMPILER_SETTINGS,
+      V2_PERIPHERY_COMPILER_SETTINGS,
+    ],
     overrides: {
       "contracts/libraries/NFTDescriptor.sol": LOWEST_OPTIMIZER_COMPILER_SETTINGS,
       "contracts/JuiceSwapNonfungiblePositionManager.sol": LOW_OPTIMIZER_COMPILER_SETTINGS,
@@ -61,13 +87,24 @@ const config: HardhatUserConfig = {
   },
   networks: {
     hardhat: {
-      chainId: 1337,
+      chainId: process.env.FORK_ENABLED === 'true' ? 5115 : 1337,
       allowUnlimitedContractSize: true,
+      forking: process.env.FORK_ENABLED === 'true' ? {
+        url: process.env.RPC_URL || 'https://rpc.testnet.citrea.xyz',
+        enabled: true,
+      } : undefined,
+      chains: {
+        5115: {
+          hardforkHistory: {
+            shanghai: 0,  // Citrea uses Shanghai EVM from genesis
+          },
+        },
+      },
     },
     localhost: {
       url: "http://127.0.0.1:8545",
-      chainId: 1337,
-      // Use Hardhat's default test accounts for local testing
+      // chainId is auto-detected from the running node
+      // When using node:fork, it will be 5115 (Citrea); otherwise 1337
     },
     citreaTestnet: {
       url: "https://rpc.testnet.citrea.xyz",

@@ -5,23 +5,25 @@
     "chainId": 5115
   },
   "deployment": {
-    "deployedAt": "2025-11-08T01:00:44.025Z",
+    "deployedAt": "2025-12-26T14:41:41.792Z",
     "deployedBy": "0xE399782Fe2B0aBb138926b14261F49473b4881A3",
-    "blockNumber": 17881089
+    "blockNumber": 19975243
   },
   "contracts": {
-    "v3CoreFactoryAddress": "0x3Ff0EE03E31DcB74c00bCf79558905cC2cf1459B",
-    "multicall2Address": "0x799A7AdE967E9B5CC37F41aB4651500841f4F58F",
-    "proxyAdminAddress": "0x4e20Ec7daaaeA8B135bf825556Bd70C062D0ee09",
-    "tickLensAddress": "0x1A3591dA03D4f3D0aD6957D93d438868d62038f7",
-    "nftDescriptorLibraryAddressV1_3_0": "0x00901B02CF54f82375Ce8B4f62331305c5dE1A51",
-    "nonfungibleTokenPositionDescriptorAddressV1_3_0": "0x2c62A8343d18300cC72cABF3C003425e653c0304",
-    "descriptorProxyAddress": "0xc078f4bE0EDB470e1b3cb145726A419170A91532",
-    "nonfungibleTokenPositionManagerAddress": "0xF78c6f509Bc7dF2CA9921cb5b3339953c4F313fD",
-    "v3MigratorAddress": "0x2cdBf6Dffd41F9b8929aEAF593dA85e468D5fb03",
-    "v3StakerAddress": "0x948FB9e1De2089457F77Dcca23E8BF4D88D5E459",
-    "quoterV2Address": "0x8d7ceDe08d30bdCE4108F58f22164C060410ac0d",
-    "swapRouter02": "0x5cacB7a81694E534e6EB03eB4598791f84E2a902"
+    "v2FactoryAddress": "0x81b159FE82d8ECC8ff4801BB687166972dF3f144",
+    "v2Router02Address": "0x48bA9db1EAcDB7C97B7B601c1E213F29E996d974",
+    "v3CoreFactoryAddress": "0x9136D17Ec096AAd031D442a796cd5984128cF0b2",
+    "multicall2Address": "0xE8C31C8c482442bf4A608Eb1DAC1Df7FA239731D",
+    "proxyAdminAddress": "0xBc6dD1660166C63bd41ec6943E4Ab81fA327B821",
+    "tickLensAddress": "0xD2C796E11baf2Ec95ee2a9796760FA51c0bb854D",
+    "nftDescriptorLibraryAddressV1_3_0": "0x0689e8fF4937507C68dA9B78bdd858Ed56130635",
+    "nonfungibleTokenPositionDescriptorAddressV1_3_0": "0x692395acA24FE3cD5D9A45D12299b809B4583E95",
+    "descriptorProxyAddress": "0x7f12a6F709868A539eD9743863FcDfdb4a894ed4",
+    "nonfungibleTokenPositionManagerAddress": "0x56D63E0F763b29F62bb7242420d028F86e9402E1",
+    "v3MigratorAddress": "0x2936DF6c0fa9A6C88744f035B3801044780F49c5",
+    "v3StakerAddress": "0x477903E3449b1C6BEaB1fDA6b5a433eb7E64cD8b",
+    "quoterV2Address": "0x14985Bc2967Dd38B1e71540d926F2c8f0dA0a1B5",
+    "swapRouter02": "0x2d11a82633adD5b8742311fDa0E751264d093E7f"
   },
   "metadata": {
     "deployer": "JuiceSwapXyz/deploy-v3",

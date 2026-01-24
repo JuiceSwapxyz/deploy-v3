@@ -1,24 +1,9 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-export interface DeploymentFile {
-  schemaVersion: string;
-  network: {
-    name: string;
-    chainId: number;
-  };
-  deployment: {
-    deployedAt: string;
-    deployedBy: string;
-    blockNumber: number;
-  };
-  contracts: Record<string, string>; // contract name -> address
-  metadata: {
-    deployer: string;
-    deploymentMethod?: string;
-    scriptVersion: string;
-  };
-}
+// Re-export types from canonical location
+export type { DeploymentState, DeploymentFile } from '../../src/constants/deployments';
+import type { DeploymentFile } from '../../src/constants/deployments';
 
 /**
  * Load a deployment JSON file

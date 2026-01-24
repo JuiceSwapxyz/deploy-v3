@@ -1,54 +1,30 @@
 # JuiceSwap V3 Deployment
 
-This package deploys JuiceSwap V3 - a branded fork of Uniswap V3 Protocol with cosmetic branding changes to user-facing NFT elements. All core DEX logic remains unchanged from the battle-tested Uniswap V3 codebase.
+This package deploys JuiceSwap V3 - a fork of Uniswap V3 with modified protocol fee parameters and JuiceSwap branding on user-facing NFT elements.
 
 ## What is JuiceSwap?
 
-JuiceSwap V3 is functionally identical to Uniswap V3, with branding applied only to NFT position tokens that users see in their wallets and on NFT marketplaces. The concentrated liquidity AMM logic, mathematical operations, fee calculations, and security properties are 100% vanilla Uniswap V3.
+JuiceSwap V3 maintains Uniswap V3's core AMM logic while enabling higher protocol fees for ecosystem development funding and applying JuiceSwap branding to NFT position tokens.
 
-**What Changed:**
-- NFT name: "Uniswap V3 Positions NFT-V1" → "JuiceSwap V3 Positions NFT-V1"
-- NFT symbol: "UNI-V3-POS" → "JUICE-V3-POS"
-- NFT metadata: "Uniswap" text → "JuiceSwap" in descriptions and titles
+**Changes Made:**
+- **Protocol Fee**: Maximum increased from 25% to 50% (default remains 0%, governance-controlled)
+- **NFT Branding**: "Uniswap V3 Positions NFT-V1" → "JuiceSwap V3 Positions NFT-V1"
+- **NFT Symbol**: "UNI-V3-POS" → "JUICE-V3-POS"
+- **NFT Metadata**: "Uniswap" → "JuiceSwap" in descriptions and titles
 
-**What Remains Unchanged:**
-- All core AMM logic (pools, swaps, liquidity management)
+**Core Functionality Unchanged:**
+- All AMM logic (pools, swaps, liquidity management)
 - All mathematical operations and fee calculations
 - All security boundaries and access controls
-- All base contracts imported from official `@uniswap` packages
 
-## Modified Contracts
+## Repository Structure
 
-JuiceSwap V3 deploys Uniswap V3 contracts with branding modifications to NFT-facing elements:
+This deployment repository uses JuiceSwap-modified Uniswap V3 contracts published to npm:
 
-### Branding Changes
-
-**JuiceSwapNonfungiblePositionManager.sol** (contracts/JuiceSwapNonfungiblePositionManager.sol:86)
-- NFT name: `'Uniswap V3 Positions NFT-V1'` → `'JuiceSwap V3 Positions NFT-V1'`
-- NFT symbol: `'UNI-V3-POS'` → `'JUICE-V3-POS'`
-- Source: [Uniswap v1.3.0](https://github.com/Uniswap/v3-periphery/blob/v1.3.0/contracts/NonfungiblePositionManager.sol)
-
-**NFTDescriptor.sol** (contracts/libraries/NFTDescriptor.sol:123, :171)
-- Description text: `'...in a Uniswap V3 '` → `'...in a JuiceSwap V3 '`
-- NFT name prefix: `'Uniswap - '` → `'JuiceSwap - '`
-- Source: [Uniswap v1.3.0](https://github.com/Uniswap/v3-periphery/blob/v1.3.0/contracts/libraries/NFTDescriptor.sol)
-
-**Supporting Libraries** (copied verbatim, no modifications)
-- NFTSVG.sol - [Source](https://github.com/Uniswap/v3-periphery/blob/v1.3.0/contracts/libraries/NFTSVG.sol)
-- HexStrings.sol - [Source](https://github.com/Uniswap/v3-periphery/blob/v1.3.0/contracts/libraries/HexStrings.sol)
-
-All contracts include attribution headers with source URLs and commit hash `80f26c86c57b8a5e4b913f42844d4c8bd274d058`.
-
-**Total modifications:** 4 string literals affecting NFT metadata display only.
-
-### Unchanged Components
-
-All core DEX logic imported from official @uniswap packages:
-- UniswapV3Factory, UniswapV3Pool (from @uniswap/v3-core@1.0.0)
-- SwapRouter02, QuoterV2 (from @uniswap/swap-router-contracts@1.1.0)
-- All base contracts, interfaces, libraries (from @uniswap/v3-periphery@1.1.1)
-
-For detailed implementation and maintenance instructions, see [JUICESWAP_BRANDING.md](./JUICESWAP_BRANDING.md).
+**Dependencies:**
+- `@juiceswapxyz/v3-core` ^1.0.0 (forked with 50% max protocol fee)
+- `@juiceswapxyz/v3-periphery` ^1.0.0 (forked with JuiceSwap NFT branding)
+- `@juiceswapxyz/swap-router-contracts` ^1.0.0 (forked from Uniswap)
 
 ## Licensing
 
@@ -224,29 +200,14 @@ npm run test:ecosystem
 
 Results saved to `/tmp/ecosystem-test.log`.
 
-**Folder Structure:**
+**Dependencies:**
 
-The integration test uses production deployment scripts from external repositories. Default folder structure:
+The integration test uses production deployment scripts from npm packages:
+- **@juicedollar/jusd**: JUSD Protocol (develop branch)
+- **@juiceswap/smart-contracts**: Governance (develop branch)
+- **@juiceswapxyz/v3-core, v3-periphery, swap-router-contracts**: DEX (published versions)
 
-```
-JuiceSwapXyz/
-├── JuiceDollar/
-│   └── smartContracts/          # JUSD deployment scripts
-├── deploy-v3/                    # This repo (JuiceSwap DEX)
-└── smart-contracts/              # Governance deployment scripts
-```
-
-**Path Overrides:**
-
-If your folder structure differs, override paths in `.env`:
-
-```bash
-# Optional: Override integration test repo paths
-JUSD_REPO_PATH=/path/to/JuiceDollar/smartContracts
-GOVERNANCE_REPO_PATH=/path/to/JuiceSwap/smart-contracts
-```
-
-See `.env.example` for complete configuration options.
+All dependencies are automatically installed via `yarn install`.
 
 ## Security Audit
 
@@ -311,22 +272,17 @@ The NonfungibleTokenPositionDescriptor is deployed behind a TransparentUpgradeab
 
 File issues in this repository or consult the [Uniswap V3 documentation](https://docs.uniswap.org/protocol/introduction) for protocol-level questions.
 
-## Repository Structure
+## Project Structure
 
 ```
 deploy-v3/
-├── contracts/
-│   ├── JuiceSwapNonfungiblePositionManager.sol  (Modified)
-│   └── libraries/
-│       ├── NFTDescriptor.sol                     (Modified)
-│       ├── NFTSVG.sol                           (Copied)
-│       └── HexStrings.sol                       (Copied)
+├── contracts/test/      # Test-only contracts (WETH9Mock, cUSD)
 ├── src/
-│   ├── deploy.ts                                (Deployment orchestration)
-│   └── steps/                                   (Individual deployment steps)
-├── artifacts/                                   (Compiled contracts)
-├── state.{network}.json                         (Network-specific deployment state)
-└── hardhat.config.ts                           (Compiler configuration)
+│   ├── deploy.ts       # Deployment orchestration
+│   └── steps/          # Individual deployment steps
+├── scripts/            # Utility scripts
+├── state.{network}.json # Network-specific deployment state
+└── hardhat.config.ts   # Compiler and network configuration
 ```
 
 ## References

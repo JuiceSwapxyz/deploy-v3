@@ -3,6 +3,10 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { GenericMigrationStep } from './migrate'
 
 export interface MigrationState {
+  // V2 Contracts
+  readonly v2FactoryAddress?: string
+  readonly v2Router02Address?: string
+  // V3 Contracts
   readonly v3CoreFactoryAddress?: string
   readonly swapRouter02?: string
   readonly nftDescriptorLibraryAddressV1_3_0?: string

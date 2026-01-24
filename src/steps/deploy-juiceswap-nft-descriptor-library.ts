@@ -1,4 +1,4 @@
-import JuiceSwapNFTDescriptor from '../../artifacts/contracts/libraries/NFTDescriptor.sol/NFTDescriptor.json'
+import JuiceSwapNFTDescriptor from '@juiceswapxyz/v3-periphery/artifacts/contracts/libraries/NFTDescriptor.sol/NFTDescriptor.json'
 import createDeployLibraryStep from './meta/createDeployLibraryStep'
 
 // Deploy JuiceSwap-branded NFTDescriptor library

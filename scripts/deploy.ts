@@ -100,9 +100,10 @@ async function waitForTransactionWithRetry(
 }
 
 /**
- * Hardhat deployment script for JuiceSwap V3
+ * Hardhat deployment script for JuiceSwap (V2 + V3)
  *
  * This wraps the existing migration system and executes it via Hardhat runtime.
+ * Deploys both V2 and V3 protocols in the correct order for unified routing.
  *
  * Usage:
  *   npx hardhat run scripts/deploy.ts --network citreaTestnet
@@ -113,11 +114,11 @@ async function waitForTransactionWithRetry(
  *     - WETH9_ADDRESS (required)
  *     - OWNER_ADDRESS (required)
  *     - NATIVE_CURRENCY_LABEL (default: "cBTC")
- *     - V2_FACTORY_ADDRESS (optional)
+ *     - V2_FACTORY_ADDRESS (optional, for legacy deployments)
  *     - GAS_PRICE (optional, in GWEI)
  */
 async function main() {
-  console.log('\n🚀 Starting JuiceSwap V3 Deployment\n')
+  console.log('\n🚀 Starting JuiceSwap Deployment (V2 + V3)\n')
 
   const [signer] = await ethers.getSigners()
   const signerAddress = await signer.getAddress()
@@ -134,8 +135,15 @@ async function main() {
   // Handle WETH9 address
   let weth9Address: string
 
-  if (isLocal) {
-    // Local testing: Deploy WETH9Mock automatically
+  // Check if WETH9_ADDRESS is provided (allows integration tests to pass their own)
+  const envWeth9Address = process.env.WETH9_ADDRESS
+
+  if (envWeth9Address) {
+    // Use provided WETH9 address (for production or integration tests)
+    weth9Address = envWeth9Address
+    console.log(`📋 Using provided WETH9 address: ${weth9Address}\n`)
+  } else if (isLocal) {
+    // Local testing without env: Deploy WETH9Mock automatically
     console.log('🧪 Local network detected - deploying WETH9Mock...\n')
     const WETH9Factory = await ethers.getContractFactory('WETH9Mock')
     const weth9Mock = await WETH9Factory.deploy()
@@ -143,12 +151,8 @@ async function main() {
     weth9Address = weth9Mock.address
     console.log(`✅ WETH9Mock deployed at: ${weth9Address}\n`)
   } else {
-    // Production: Use WETH9_ADDRESS from environment
-    const envWeth9Address = process.env.WETH9_ADDRESS
-    if (!envWeth9Address) {
-      throw new Error('WETH9_ADDRESS environment variable is required for non-local networks')
-    }
-    weth9Address = envWeth9Address
+    // Production without env: Error
+    throw new Error('WETH9_ADDRESS environment variable is required for non-local networks')
   }
 
   // Load other configuration from environment
@@ -187,14 +191,15 @@ async function main() {
     // Localhost: Always start fresh, don't load previous state
     console.log(`📋 Localhost deployment - starting fresh (ephemeral network)\n`)
   } else {
-    // Production: Load existing state for resumable deployments
-    if (fs.existsSync(stateFilePath)) {
+    // Production: Load existing state for resumable deployments (unless FULL_REDEPLOY)
+    if (fs.existsSync(stateFilePath) && process.env.FULL_REDEPLOY !== 'true') {
       console.log(`📋 Loading existing deployment state from deployments/${networkName}/dex.json\n`)
       const savedData = JSON.parse(fs.readFileSync(stateFilePath, 'utf8'))
       // Extract state from standardized schema
       initialState = savedData.contracts || {}
     } else {
-      console.log(`📋 Starting fresh deployment (no existing deployments/${networkName}/dex.json)\n`)
+      const reason = process.env.FULL_REDEPLOY === 'true' ? 'FULL_REDEPLOY enabled' : 'no existing state'
+      console.log(`📋 Starting fresh deployment (${reason})\n`)
     }
   }
 
@@ -292,8 +297,13 @@ async function main() {
     // Read final state from file (production) or use in-memory state (localhost)
     const displayState = isLocal ? finalState : JSON.parse(fs.readFileSync(stateFilePath, 'utf8')).contracts
 
-    console.log(`\n  UniswapV3Factory: ${displayState.v3CoreFactoryAddress || 'N/A'}`)
-    console.log(`  JuiceSwap Position Manager: ${displayState.nonfungibleTokenPositionManagerAddress || 'N/A'}`)
+    console.log('\n  === V2 Contracts ===')
+    console.log(`  V2 Factory: ${displayState.v2FactoryAddress || 'N/A'}`)
+    console.log(`  V2 Router02: ${displayState.v2Router02Address || 'N/A'}`)
+
+    console.log('\n  === V3 Contracts ===')
+    console.log(`  V3 Factory: ${displayState.v3CoreFactoryAddress || 'N/A'}`)
+    console.log(`  Position Manager: ${displayState.nonfungibleTokenPositionManagerAddress || 'N/A'}`)
     console.log(`  SwapRouter02: ${displayState.swapRouter02 || 'N/A'}`)
     console.log(`  QuoterV2: ${displayState.quoterV2Address || 'N/A'}`)
     console.log(`  NFT Descriptor Proxy: ${displayState.descriptorProxyAddress || 'N/A'}`)
@@ -302,7 +312,7 @@ async function main() {
     console.log(`  V3Staker: ${displayState.v3StakerAddress || 'N/A'}`)
     console.log(`  TickLens: ${displayState.tickLensAddress || 'N/A'}`)
 
-    console.log('\n✨ JuiceSwap V3 is ready to use!')
+    console.log('\n✨ JuiceSwap (V2 + V3) is ready to use!')
 
   } catch (error: any) {
     console.error('\n❌ Deployment Failed!')
