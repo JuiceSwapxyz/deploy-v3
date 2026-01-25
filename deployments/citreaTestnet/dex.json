@@ -5,25 +5,25 @@
     "chainId": 5115
   },
   "deployment": {
-    "deployedAt": "2025-12-26T14:41:41.792Z",
-    "deployedBy": "0xE399782Fe2B0aBb138926b14261F49473b4881A3",
-    "blockNumber": 19975243
+    "deployedAt": "2026-01-25T05:33:03.331Z",
+    "deployedBy": "0xaa90815Cb5250A868FDc914ADCbf26773126F550",
+    "blockNumber": 21255258
   },
   "contracts": {
-    "v2FactoryAddress": "0x81b159FE82d8ECC8ff4801BB687166972dF3f144",
-    "v2Router02Address": "0x48bA9db1EAcDB7C97B7B601c1E213F29E996d974",
-    "v3CoreFactoryAddress": "0x9136D17Ec096AAd031D442a796cd5984128cF0b2",
-    "multicall2Address": "0xE8C31C8c482442bf4A608Eb1DAC1Df7FA239731D",
-    "proxyAdminAddress": "0xBc6dD1660166C63bd41ec6943E4Ab81fA327B821",
-    "tickLensAddress": "0xD2C796E11baf2Ec95ee2a9796760FA51c0bb854D",
-    "nftDescriptorLibraryAddressV1_3_0": "0x0689e8fF4937507C68dA9B78bdd858Ed56130635",
-    "nonfungibleTokenPositionDescriptorAddressV1_3_0": "0x692395acA24FE3cD5D9A45D12299b809B4583E95",
-    "descriptorProxyAddress": "0x7f12a6F709868A539eD9743863FcDfdb4a894ed4",
-    "nonfungibleTokenPositionManagerAddress": "0x56D63E0F763b29F62bb7242420d028F86e9402E1",
-    "v3MigratorAddress": "0x2936DF6c0fa9A6C88744f035B3801044780F49c5",
-    "v3StakerAddress": "0x477903E3449b1C6BEaB1fDA6b5a433eb7E64cD8b",
-    "quoterV2Address": "0x14985Bc2967Dd38B1e71540d926F2c8f0dA0a1B5",
-    "swapRouter02": "0x2d11a82633adD5b8742311fDa0E751264d093E7f"
+    "v2FactoryAddress": "0xfc271758732F5eD3ddF19727B7E29BFC3325370d",
+    "v2Router02Address": "0x37164703eF51EcB49C9a565C233a277003aE483f",
+    "v3CoreFactoryAddress": "0xdd6Db52dB41CE2C03002bB1adFdCC8E91C594238",
+    "multicall2Address": "0xC1bD4864F267f8B032224817d33A7b53eD866F5e",
+    "proxyAdminAddress": "0xCdc7C81784F9D3b4061e754477BEA077B7B4cCa4",
+    "tickLensAddress": "0xa0Fe847227eE5076bC5D1D3c605261837fa047fB",
+    "nftDescriptorLibraryAddressV1_3_0": "0x73e3bDE5af755C34fC4487cA083cb8035a43d1Ef",
+    "nonfungibleTokenPositionDescriptorAddressV1_3_0": "0x17a12a5461Bf35d4383B3f039d7e5Cd7d92aAACD",
+    "descriptorProxyAddress": "0x6b8e06186725e41EC05045A957bA78A336b3dd70",
+    "nonfungibleTokenPositionManagerAddress": "0x86e7A161cb9696E6d438c0c77dd18244efa2B8b1",
+    "v3MigratorAddress": "0xfa83918a27F9cC32619ae1A85f7e1Ae3e3F6Ceb8",
+    "v3StakerAddress": "0xeeb6c9514f1E11E48f18DD8822eF3Db1B179DcCE",
+    "quoterV2Address": "0x719a4C7B49E5361a39Dc83c23b353CA220D9B99d",
+    "swapRouter02": "0x26C106BC45E0dd599cbDD871605497B2Fc87c185"
   },
   "metadata": {
     "deployer": "JuiceSwapXyz/deploy-v3",
