@@ -112,7 +112,7 @@ async function waitForTransactionWithRetry(
  *   - Network settings from hardhat.config.ts
  *   - Deployment parameters from .env:
  *     - WETH9_ADDRESS (required)
- *     - OWNER_ADDRESS (required)
+ *     - OWNER_ADDRESS (default: deployer - transferred to Governor later)
  *     - NATIVE_CURRENCY_LABEL (default: "cBTC")
  *     - V2_FACTORY_ADDRESS (optional, for legacy deployments)
  *     - GAS_PRICE (optional, in GWEI)
@@ -156,15 +156,11 @@ async function main() {
   }
 
   // Load other configuration from environment
-  const ownerAddress = process.env.OWNER_ADDRESS || (isLocal ? signerAddress : undefined)
+  // Owner defaults to deployer - will be transferred to Governor after governance deployment
+  const ownerAddress = process.env.OWNER_ADDRESS || signerAddress
   const nativeCurrencyLabel = process.env.NATIVE_CURRENCY_LABEL || 'cBTC'
   const v2CoreFactoryAddress = process.env.V2_FACTORY_ADDRESS || ethers.constants.AddressZero
   const gasConfig = getGasConfig(networkName)
-
-  // Validate required parameters
-  if (!ownerAddress) {
-    throw new Error('OWNER_ADDRESS environment variable is required for non-local networks')
-  }
 
   console.log('📝 Configuration:')
   console.log(`  WETH9: ${weth9Address}`)
