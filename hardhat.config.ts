@@ -112,10 +112,17 @@ const config: HardhatUserConfig = {
       accounts: getPrivateKey() ? [getPrivateKey()!] : [],
       timeout: 300_000,
     },
+    citrea: {
+      url: "https://rpc.mainnet.citrea.xyz",
+      chainId: 4114,
+      accounts: getPrivateKey() ? [getPrivateKey()!] : [],
+      timeout: 300_000,
+    },
   },
   etherscan: {
     apiKey: {
       citreaTestnet: "no-api-key-needed",
+      citrea: "no-api-key-needed",
     },
     customChains: [
       {
@@ -124,6 +131,14 @@ const config: HardhatUserConfig = {
         urls: {
           apiURL: "https://explorer.testnet.citrea.xyz/api",
           browserURL: "https://explorer.testnet.citrea.xyz",
+        },
+      },
+      {
+        network: "citrea",
+        chainId: 4114,
+        urls: {
+          apiURL: "https://explorer.mainnet.citrea.xyz/api",
+          browserURL: "https://explorer.mainnet.citrea.xyz",
         },
       },
     ],
