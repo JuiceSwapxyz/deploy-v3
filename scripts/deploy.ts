@@ -25,8 +25,8 @@ function getGasConfig(networkName: string): GasConfig {
       maxPriorityFeePerGas: '1',
     },
     citrea: {
-      maxFeePerGas: '0.01',
-      maxPriorityFeePerGas: '0.001',
+      maxFeePerGas: '0.002',
+      maxPriorityFeePerGas: '0.0005',
     },
     citreaTestnet: {
       maxFeePerGas: '0.01',
