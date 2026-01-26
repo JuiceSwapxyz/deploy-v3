@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "1.0",
+  "network": {
+    "name": "citrea",
+    "chainId": 4114
+  },
+  "deployment": {
+    "deployedAt": "2026-01-26T04:59:21.170Z",
+    "deployedBy": "0xECc0b131D481dE8aB538D19F04dD4b253660D82B",
+    "blockNumber": 2651625
+  },
+  "contracts": {
+    "v2FactoryAddress": "0x400B27260bc8BbBF740e25B29a24EDf175d9fE56",
+    "v2Router02Address": "0x6BDea31C89E0A202cE84b5752BB2e827B39984ae",
+    "v3CoreFactoryAddress": "0xd809b1285aDd8eeaF1B1566Bf31B2B4C4Bba8e82",
+    "multicall2Address": "0xd277541Ab4f406Ac9530C41aB3d1818C276e1A1c",
+    "proxyAdminAddress": "0x7864b1f116F939eeCFDCf76B532d5BBDa5F80031",
+    "tickLensAddress": "0xD9d430f27F922A3316d22Cd9d58558f45Dad8012",
+    "nftDescriptorLibraryAddressV1_3_0": "0x106ff466B27D10e9Ab932c443Cd790BbA0027ec6",
+    "nonfungibleTokenPositionDescriptorAddressV1_3_0": "0x321c3C687D65C22A25f1e461e2568156adfD5D9C",
+    "descriptorProxyAddress": "0x2e6D1f833a7951d02A47f244bA5F429699B87E4f",
+    "nonfungibleTokenPositionManagerAddress": "0x3D3821D358f56395d4053954f98aec0E1F0fa568",
+    "v3MigratorAddress": "0xB9e69B428a5BfF4aCA9bfE66E80BAfD0477165E6",
+    "v3StakerAddress": "0xB511028582FDEe8AC66b524630Cc85e457f66Aa1",
+    "quoterV2Address": "0x428f20dd8926Eabe19653815Ed0BE7D6c36f8425",
+    "swapRouter02": "0x565eD3D57fe40f78A46f348C220121AE093c3cF8"
+  },
+  "metadata": {
+    "deployer": "JuiceSwapXyz/deploy-v3",
+    "deploymentMethod": "incremental-migration",
+    "scriptVersion": "1.0.0"
+  }
+}
