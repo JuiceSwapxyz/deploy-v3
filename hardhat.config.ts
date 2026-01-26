@@ -87,24 +87,36 @@ const config: HardhatUserConfig = {
   },
   networks: {
     hardhat: {
-      chainId: process.env.FORK_ENABLED === 'true' ? 5115 : 1337,
+      chainId: process.env.FORK_TESTNET ? 5115 : process.env.FORK_MAINNET ? 4114 : 31337,
       allowUnlimitedContractSize: true,
-      forking: process.env.FORK_ENABLED === 'true' ? {
-        url: process.env.RPC_URL || 'https://rpc.testnet.citrea.xyz',
+      forking: process.env.FORK_TESTNET ? {
+        url: process.env.CITREA_TESTNET_RPC || "https://rpc.testnet.citrea.xyz",
+        enabled: true,
+      } : process.env.FORK_MAINNET ? {
+        url: process.env.CITREA_MAINNET_RPC || "https://rpc.mainnet.citrea.xyz",
         enabled: true,
       } : undefined,
       chains: {
-        5115: {
-          hardforkHistory: {
-            shanghai: 0,  // Citrea uses Shanghai EVM from genesis
-          },
-        },
+        5115: { hardforkHistory: { shanghai: 0 } },
+        4114: { hardforkHistory: { shanghai: 0 } },
       },
+    },
+    // Fork networks - connect to a running forked node started via:
+    //   npm run node:fork:testnet  (testnet fork)
+    //   npm run node:fork:mainnet  (mainnet fork)
+    forkTestnet: {
+      url: "http://127.0.0.1:8545",
+      chainId: 5115,
+      timeout: 300_000,
+    },
+    forkMainnet: {
+      url: "http://127.0.0.1:8545",
+      chainId: 4114,
+      timeout: 300_000,
     },
     localhost: {
       url: "http://127.0.0.1:8545",
       // chainId is auto-detected from the running node
-      // When using node:fork, it will be 5115 (Citrea); otherwise 1337
     },
     citreaTestnet: {
       url: "https://rpc.testnet.citrea.xyz",

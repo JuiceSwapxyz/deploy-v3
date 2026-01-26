@@ -16,15 +16,20 @@
     "prepublishOnly": "yarn build",
     "compile": "npx hardhat compile",
     "node": "npx hardhat node",
-    "node:fork": "FORK_ENABLED=true npx hardhat node",
+    "node:fork:testnet": "FORK_TESTNET=true npx hardhat node",
+    "node:fork:mainnet": "FORK_MAINNET=true npx hardhat node",
     "deploy:local": "npx hardhat run scripts/deploy.ts --network localhost",
-    "deploy:fork": "FORK_ENABLED=true npx hardhat run scripts/deploy.ts --network hardhat",
+    "deploy:fork:testnet": "FORK_TESTNET=true npx hardhat run scripts/deploy.ts --network hardhat",
+    "deploy:fork:mainnet": "FORK_MAINNET=true npx hardhat run scripts/deploy.ts --network hardhat",
     "deploy:testnet": "npx hardhat run scripts/deploy.ts --network citreaTestnet",
+    "deploy:mainnet": "npx hardhat run scripts/deploy.ts --network citrea",
     "verify:testnet": "DEPLOYMENT_FILE_PATH=./deployments/citreaTestnet/dex.json npx hardhat run scripts/verifyContracts.ts --network citreaTestnet",
+    "verify:mainnet": "DEPLOYMENT_FILE_PATH=./deployments/citrea/dex.json npx hardhat run scripts/verifyContracts.ts --network citrea",
     "validate:hashes": "ts-node scripts/validateHashes.ts",
     "pretest:ecosystem": "npm run validate:hashes",
     "test:ecosystem": "hardhat run scripts/integration/fullEcosystemTest.ts --network localhost",
-    "test:deployed": "hardhat run scripts/integration/testDeployedDex.ts --network localhost"
+    "test:ecosystem:fork": "FORK_TESTNET=true hardhat run scripts/integration/fullEcosystemTest.ts --network hardhat",
+    "test:deployed": "FORK_TESTNET=true hardhat run scripts/integration/testDeployedDex.ts --network hardhat"
   },
   "files": [
     "dist/"
