@@ -4,7 +4,10 @@
  *
  * Usage:
  *   # Test citreaTestnet deployment on a fork (forks citreaTestnet, loads citreaTestnet addresses)
- *   FORK_ENABLED=true npx hardhat run scripts/integration/testDeployedDex.ts --network hardhat
+ *   FORK_TESTNET=true npx hardhat run scripts/integration/testDeployedDex.ts --network hardhat
+ *
+ *   # Test citrea (mainnet) deployment on a fork
+ *   FORK_MAINNET=true DEPLOYMENT_NETWORK=citrea npx hardhat run scripts/integration/testDeployedDex.ts --network hardhat
  */
 import { ethers } from 'hardhat'
 import { Contract, BigNumber } from 'ethers'
