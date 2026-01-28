@@ -2,7 +2,7 @@ import { ethers } from 'ethers'
 import { abi as IUniswapV3FactoryABI } from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Factory.sol/IUniswapV3Factory.json'
 
 async function findPoolCreation() {
-  const CITREA_RPC = 'https://rpc.testnet.citrea.xyz'
+  const CITREA_RPC = 'https://rpc.testnet.citreascan.com'
   const FACTORY_ADDRESS = '0x6832283eEA5a9A3C4384A5D9a06Db0ce6FE9C79E'
   const POOL_ADDRESS = '0xD8C7604176475eB8D350bC1EE452dA4442637C09'
   

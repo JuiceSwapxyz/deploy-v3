@@ -86,7 +86,7 @@ async function wrapCBTC() {
     // Explorer link
     console.log('')
     console.log('🔍 View transaction:')
-    console.log(`https://explorer.testnet.citrea.xyz/tx/${tx.hash}`)
+    console.log(`https://testnet.citreascan.com/tx/${tx.hash}`)
     
   } catch (error) {
     console.error('❌ Error wrapping cBTC:', error)

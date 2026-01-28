@@ -39,7 +39,7 @@ async function verifyPoolOnCitrea() {
     console.log("\nHardhat verification failed, trying API approach...");
 
     // Alternative: Try direct API submission
-    const apiUrl = "https://explorer.testnet.citrea.xyz/api/v2/smart-contracts/" + POOL_ADDRESS + "/verification/via/sourcify";
+    const apiUrl = "https://testnet.citreascan.com/api/v2/smart-contracts/" + POOL_ADDRESS + "/verification/via/sourcify";
 
     const verificationData = {
       address: POOL_ADDRESS,
@@ -68,7 +68,7 @@ async function verifyPoolOnCitrea() {
       // Provide manual instructions
       console.log("\n=== Manual Verification Instructions ===");
       console.log("Since automatic verification failed, please verify manually:");
-      console.log("1. Go to: https://explorer.testnet.citrea.xyz/address/" + POOL_ADDRESS);
+      console.log("1. Go to: https://testnet.citreascan.com/address/" + POOL_ADDRESS);
       console.log("2. Click on 'Contract' tab");
       console.log("3. Click on 'Verify & Publish'");
       console.log("4. Select:");

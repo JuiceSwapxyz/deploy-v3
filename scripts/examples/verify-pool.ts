@@ -27,7 +27,7 @@ async function verifyPoolContract() {
   console.log('')
   
   console.log('Verification Steps:')
-  console.log('1. Go to: https://explorer.testnet.citrea.xyz/address/' + POOL_ADDRESS)
+  console.log('1. Go to: https://testnet.citreascan.com/address/' + POOL_ADDRESS)
   console.log('2. Click on "Contract" tab')
   console.log('3. Click on "Verify & Publish"')
   console.log('4. Select:')

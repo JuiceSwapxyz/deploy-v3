@@ -180,8 +180,8 @@ async function createPoolAndAddLiquidity() {
     console.log('  Position NFT:', tokenId?.toString())
     console.log('')
     console.log('🔍 View on Explorer:')
-    console.log(`  Pool: https://explorer.testnet.citrea.xyz/address/${poolAddress}`)
-    console.log(`  Transaction: https://explorer.testnet.citrea.xyz/tx/${mintTx.hash}`)
+    console.log(`  Pool: https://testnet.citreascan.com/address/${poolAddress}`)
+    console.log(`  Transaction: https://testnet.citreascan.com/tx/${mintTx.hash}`)
 
   } catch (error) {
     console.error('❌ Error:', error)

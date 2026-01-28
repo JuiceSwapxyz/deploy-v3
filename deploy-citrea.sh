@@ -3,7 +3,7 @@
 # Citrea Testnet JuiceSwap V3 Deployment Script
 
 # Configuration (can be overridden via environment variables)
-CITREA_RPC_URL="${CITREA_RPC_URL:-https://rpc.testnet.citrea.xyz}"
+CITREA_RPC_URL="${CITREA_RPC_URL:-https://rpc.testnet.citreascan.com}"
 WETH9_ADDRESS="${WETH9_ADDRESS:-0x8d0c9d1c17aE5e40ffF9bE350f57840E9E66Cd93}"
 NATIVE_CURRENCY_LABEL="${NATIVE_CURRENCY_LABEL:-cBTC}"
 

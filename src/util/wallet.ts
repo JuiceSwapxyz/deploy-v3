@@ -31,7 +31,7 @@ export function getCitreaWallet(): ethers.Wallet {
 
   // Create provider connected to Citrea testnet
   const provider = new ethers.providers.JsonRpcProvider(
-    'https://rpc.testnet.citrea.xyz',
+    'https://rpc.testnet.citreascan.com',
     5115
   )
 

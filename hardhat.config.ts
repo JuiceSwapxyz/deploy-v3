@@ -90,10 +90,10 @@ const config: HardhatUserConfig = {
       chainId: process.env.FORK_TESTNET ? 5115 : process.env.FORK_MAINNET ? 4114 : 31337,
       allowUnlimitedContractSize: true,
       forking: process.env.FORK_TESTNET ? {
-        url: process.env.CITREA_TESTNET_RPC || "https://rpc.testnet.citrea.xyz",
+        url: process.env.CITREA_TESTNET_RPC || "https://rpc.testnet.citreascan.com",
         enabled: true,
       } : process.env.FORK_MAINNET ? {
-        url: process.env.CITREA_MAINNET_RPC || "https://rpc.mainnet.citrea.xyz",
+        url: process.env.CITREA_MAINNET_RPC || "https://rpc.citreascan.com",
         enabled: true,
       } : undefined,
       chains: {
@@ -119,13 +119,13 @@ const config: HardhatUserConfig = {
       // chainId is auto-detected from the running node
     },
     citreaTestnet: {
-      url: "https://rpc.testnet.citrea.xyz",
+      url: "https://rpc.testnet.citreascan.com",
       chainId: 5115,
       accounts: getPrivateKey() ? [getPrivateKey()!] : [],
       timeout: 300_000,
     },
     citrea: {
-      url: "https://rpc.mainnet.citrea.xyz",
+      url: "https://rpc.citreascan.com",
       chainId: 4114,
       accounts: getPrivateKey() ? [getPrivateKey()!] : [],
       timeout: 300_000,
@@ -141,16 +141,16 @@ const config: HardhatUserConfig = {
         network: "citreaTestnet",
         chainId: 5115,
         urls: {
-          apiURL: "https://explorer.testnet.citrea.xyz/api",
-          browserURL: "https://explorer.testnet.citrea.xyz",
+          apiURL: "https://testnet.citreascan.com/api",
+          browserURL: "https://testnet.citreascan.com",
         },
       },
       {
         network: "citrea",
         chainId: 4114,
         urls: {
-          apiURL: "https://explorer.mainnet.citrea.xyz/api",
-          browserURL: "https://explorer.mainnet.citrea.xyz",
+          apiURL: "https://citreascan.com/api",
+          browserURL: "https://citreascan.com",
         },
       },
     ],

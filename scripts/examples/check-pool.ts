@@ -3,7 +3,7 @@ import { abi as IUniswapV3FactoryABI } from '@uniswap/v3-core/artifacts/contract
 import { abi as IUniswapV3PoolABI } from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json'
 
 async function checkPool() {
-  const CITREA_RPC = 'https://rpc.testnet.citrea.xyz'
+  const CITREA_RPC = 'https://rpc.testnet.citreascan.com'
   const POOL_ADDRESS = '0xD8C7604176475eB8D350bC1EE452dA4442637C09'
   
   const provider = new ethers.providers.JsonRpcProvider(CITREA_RPC, 5115)
