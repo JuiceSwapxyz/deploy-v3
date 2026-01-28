@@ -4,11 +4,11 @@ import { execSync } from 'child_process'
 
 // Citrea Testnet Configuration
 const CITREA_CONFIG = {
-  RPC_URL: 'https://rpc.testnet.citrea.xyz',
+  RPC_URL: 'https://rpc.testnet.citreascan.com',
   CHAIN_ID: 5115,
   WETH9_ADDRESS: '0x4370e27F7d91D9341bFf232d7Ee8bdfE3a9933a0',
   NATIVE_CURRENCY: 'cBTC',
-  EXPLORER: 'https://explorer.testnet.citrea.xyz'
+  EXPLORER: 'https://testnet.citreascan.com'
 }
 
 async function generateAndDeploy() {

@@ -12,7 +12,7 @@
 3. Request testnet cBTC
 
 ## Check Balance
-Visit: https://explorer.testnet.citrea.xyz/address/0xc89E49490020fc4e8eE681553A2354234Fc3F1D4
+Visit: https://testnet.citreascan.com/address/0xc89E49490020fc4e8eE681553A2354234Fc3F1D4
 
 ## After Funding
 Run the deployment:

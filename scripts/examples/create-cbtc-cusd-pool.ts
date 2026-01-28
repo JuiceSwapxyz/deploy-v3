@@ -39,7 +39,7 @@ const WETH9_ABI = [
 
 async function createCBTCtoUSDPool() {
   // Configuration
-  const CITREA_RPC = 'https://rpc.testnet.citrea.xyz'
+  const CITREA_RPC = 'https://rpc.testnet.citreascan.com'
   const PRIVATE_KEY = process.env.PRIVATE_KEY
 
   if (!PRIVATE_KEY) {
@@ -290,8 +290,8 @@ async function createCBTCtoUSDPool() {
     console.log('  Position NFT:', tokenId?.toString())
     console.log('')
     console.log('🔍 View on Explorer:')
-    console.log(`  Pool: https://explorer.testnet.citrea.xyz/address/${poolAddress}`)
-    console.log(`  Transaction: https://explorer.testnet.citrea.xyz/tx/${mintTx.hash}`)
+    console.log(`  Pool: https://testnet.citreascan.com/address/${poolAddress}`)
+    console.log(`  Transaction: https://testnet.citreascan.com/tx/${mintTx.hash}`)
     console.log('')
     console.log('📝 Pool details saved to cbtc-cusd-pool.json')
 

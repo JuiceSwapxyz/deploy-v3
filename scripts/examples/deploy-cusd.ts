@@ -8,9 +8,9 @@ dotenv.config()
 
 // Citrea Testnet Configuration
 const CITREA_CONFIG = {
-  RPC_URL: 'https://rpc.testnet.citrea.xyz',
+  RPC_URL: 'https://rpc.testnet.citreascan.com',
   CHAIN_ID: 5115,
-  EXPLORER: 'https://explorer.testnet.citrea.xyz'
+  EXPLORER: 'https://testnet.citreascan.com'
 }
 
 async function deploycUSD() {

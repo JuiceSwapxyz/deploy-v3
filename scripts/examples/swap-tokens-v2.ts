@@ -143,7 +143,7 @@ async function swapTFCtoWCBTC() {
     
     console.log('')
     console.log('🔍 View on Explorer:')
-    console.log(`  Transaction: https://explorer.testnet.citrea.xyz/tx/${swapTx.hash}`)
+    console.log(`  Transaction: https://testnet.citreascan.com/tx/${swapTx.hash}`)
     console.log('')
     console.log('🎉 Swap completed successfully!')
     
